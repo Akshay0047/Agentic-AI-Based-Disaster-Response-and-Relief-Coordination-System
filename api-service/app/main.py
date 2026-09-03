@@ -1,6 +1,29 @@
+import os
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.core.config import settings
 
 import app.db.base  # noqa: F401  (registers all models before routes resolve relationships)
+
+# CORS origins — default to the Vite dev server origin; override via CORS_ORIGINS env var.
+_cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:5173")
+_cors_origins = [o.strip() for o in _cors_origins_str.split(",") if o.strip()]
+
+app = FastAPI(
+    title=settings.app_name,
+    debug=settings.debug,
+    cors_allowed_origins=_cors_origins,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 from app.api.routes import (
     assignments,
@@ -11,9 +34,6 @@ from app.api.routes import (
     shelters,
     volunteers,
 )
-from app.core.config import settings
-
-app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 prefix = settings.api_v1_prefix
 

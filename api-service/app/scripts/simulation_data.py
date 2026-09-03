@@ -23,6 +23,7 @@ import random
 from sqlalchemy import func, select, text
 
 from app.core.security import hash_password
+from app.db.base import Base  # noqa: F401  (registers ALL models so string relationships resolve)
 from app.db.session import AsyncSessionLocal, engine
 from app.models.emergency_request import EmergencyRequest
 from app.models.enums import (

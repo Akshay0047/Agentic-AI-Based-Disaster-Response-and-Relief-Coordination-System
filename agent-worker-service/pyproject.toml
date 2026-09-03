@@ -1,9 +1,14 @@
 [project]
 name = "agent-worker-service"
 version = "0.1.0"
-description = "Agent Worker service (Claude agent + tool executor) for the Disaster Response System"
+description = "Agent Worker service (Grok agent + tool executor) for the Disaster Response System"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "openai>=1.50",
+    "pydantic-settings>=2.0",
+    "sqlalchemy[asyncio]>=2.0",
+    "asyncpg>=0.29",
+]
 
 [build-system]
 requires = ["setuptools>=68"]

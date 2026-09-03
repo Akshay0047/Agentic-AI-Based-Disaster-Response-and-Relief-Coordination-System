@@ -178,11 +178,172 @@ def test_citizen_cannot_view_other_citizen_assignment():
     assert resp.status_code == 200
 
 
+def test_all_models_configure_cleanly():
+    """All ORM relationships must resolve at mapper-configuration time.
+
+    Regression guard for the login-500 bug: User.approved_actions is a string
+    relationship to AgentActionLog, which 500'd at runtime when app startup
+    never imported app.db.base. configure_mappers() forces resolution of every
+    relationship string immediately, turning that failure class into a loud
+    test failure instead of a runtime 500.
+    """
+    from sqlalchemy.orm import configure_mappers
+
+    import app.db.base  # noqa: F401
+
+    configure_mappers()
+
+
+def test_login_success_volunteer():
+    _register("vol_login@example.com", role="volunteer")
+    resp = client.post(
+        "/api/v1/auth/login",
+        json={"email": "vol_login@example.com", "password": "secret123"},
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["token_type"] == "bearer"
+    # A JWT is three base64url segments separated by dots
+    assert len(body["access_token"].split(".")) == 3
+    assert body["user"]["role"] == "volunteer"
+    assert body["user"]["email"] == "vol_login@example.com"
+
+
+def test_login_success_admin():
+    _register("admin_login@example.com", role="admin")
+    resp = client.post(
+        "/api/v1/auth/login",
+        json={"email": "admin_login@example.com", "password": "secret123"},
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["token_type"] == "bearer"
+    assert len(body["access_token"].split(".")) == 3
+    assert body["user"]["role"] == "admin"
+
+
+def test_login_wrong_password_rejected():
+    _register("vol_wrongpw@example.com", role="volunteer")
+    resp = client.post(
+        "/api/v1/auth/login",
+        json={"email": "vol_wrongpw@example.com", "password": "not-the-password"},
+    )
+    assert resp.status_code == 401
+
+
 def test_enum_definitions():
     from app.models.enums import Priority
 
     assert Priority("critical").value == "critical"
     assert "p1" not in {p.value for p in Priority}
+
+
+def test_admin_can_create_and_update_shelter():
+    _register("shelter_admin@example.com", role="admin")
+    token = _token("shelter_admin@example.com")
+
+    resp = client.post(
+        "/api/v1/shelters",
+        json={"name": "Test Relief Camp", "address": "1 Test Rd", "capacity": 120,
+              "has_medical_facility": True},
+        headers=_auth(token),
+    )
+    assert resp.status_code == 201, resp.text
+    shelter = resp.json()
+    assert shelter["capacity"] == 120
+    assert shelter["current_occupancy"] == 0
+
+    resp = client.patch(
+        f"/api/v1/shelters/{shelter['id']}",
+        json={"current_occupancy": 25},
+        headers=_auth(token),
+    )
+    assert resp.status_code == 200
+    assert resp.json()["current_occupancy"] == 25
+
+    resp = client.get(f"/api/v1/shelters/{shelter['id']}", headers=_auth(token))
+    assert resp.status_code == 200
+    assert resp.json()["current_occupancy"] == 25
+
+
+def test_non_admin_cannot_create_shelter():
+    _register("shelter_citizen@example.com")
+    token = _token("shelter_citizen@example.com")
+    resp = client.post(
+        "/api/v1/shelters",
+        json={"name": "Nope Shelter"},
+        headers=_auth(token),
+    )
+    assert resp.status_code == 403
+
+
+def test_admin_can_create_and_update_resource():
+    _register("res_admin@example.com", role="admin")
+    token = _token("res_admin@example.com")
+
+    resp = client.post(
+        "/api/v1/resources",
+        json={"resource_type": "water", "quantity": 100, "unit": "liters"},
+        headers=_auth(token),
+    )
+    assert resp.status_code == 201, resp.text
+    resource = resp.json()
+    assert resource["quantity"] == 100
+
+    resp = client.patch(
+        f"/api/v1/resources/{resource['id']}",
+        json={"quantity": 80},
+        headers=_auth(token),
+    )
+    assert resp.status_code == 200
+    assert resp.json()["quantity"] == 80
+
+
+def test_volunteer_cannot_create_resource():
+    _register("res_vol@example.com", role="volunteer")
+    token = _token("res_vol@example.com")
+    resp = client.post(
+        "/api/v1/resources",
+        json={"resource_type": "food", "quantity": 10},
+        headers=_auth(token),
+    )
+    assert resp.status_code == 403
+
+
+def test_admin_can_update_volunteer_profile():
+    _register("prof_admin@example.com", role="admin")
+    _register("prof_vol@example.com", role="volunteer")
+    admin_token = _token("prof_admin@example.com")
+
+    resp = client.get("/api/v1/volunteers", headers=_auth(admin_token))
+    assert resp.status_code == 200
+    vol = next(v for v in resp.json() if v["skills"] == [])
+    vol_id = vol["id"]
+
+    resp = client.patch(
+        f"/api/v1/volunteers/{vol_id}",
+        json={"skills": ["medical", "rescue"], "current_workload": 2},
+        headers=_auth(admin_token),
+    )
+    assert resp.status_code == 200, resp.text
+    assert resp.json()["skills"] == ["medical", "rescue"]
+    assert resp.json()["current_workload"] == 2
+
+
+def test_volunteer_cannot_update_other_volunteer_profile():
+    _register("prof_vol_a@example.com", role="volunteer")
+    token_a = _token("prof_vol_a@example.com")
+    resp = client.get("/api/v1/volunteers", headers=_auth(token_a))
+    own_id = resp.json()[0]["id"]
+
+    # Volunteer (non-admin) must not use the admin profile-update endpoint,
+    # even against their own record.
+    resp = client.patch(
+        f"/api/v1/volunteers/{own_id}",
+        json={"skills": ["hacking"]},
+        headers=_auth(token_a),
+    )
+    assert resp.status_code == 403
 
 
 def test_volunteer_availability_endpoint():

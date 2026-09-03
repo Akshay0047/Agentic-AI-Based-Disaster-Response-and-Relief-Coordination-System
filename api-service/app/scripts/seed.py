@@ -17,10 +17,16 @@ from app.models.enums import (
     ResourceType,
     UserRole,
 )
+from app.models.agent_action_log import AgentActionLog  # noqa: F401
+from app.models.agent_plan import AgentPlan  # noqa: F401
+from app.models.emergency_request import EmergencyRequest  # noqa: F401
+from app.models.notification import Notification  # noqa: F401
+from app.models.rescue_assignment import RescueAssignment  # noqa: F401
 from app.models.resource import Resource
 from app.models.shelter import Shelter
 from app.models.user import User
 from app.models.volunteer import Volunteer
+from app.models.weather_event import WeatherEvent  # noqa: F401
 
 
 async def seed() -> None:
@@ -77,6 +83,15 @@ async def seed() -> None:
             Resource(shelter_id=shelters[2].id, resource_type=ResourceType.medical_team, quantity=6, unit="teams"),
         ]
         db.add_all(resources)
+
+        # --- Admin ---
+        admin = User(
+            email="admin@example.com",
+            full_name="System Admin",
+            hashed_password=hash_password("password123"),
+            role=UserRole.admin,
+        )
+        db.add(admin)
 
         # --- Volunteers (with users) ---
         volunteers_data = [

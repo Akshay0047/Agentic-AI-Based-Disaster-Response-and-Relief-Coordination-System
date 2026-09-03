@@ -23,3 +23,12 @@ class VolunteerRead(VolunteerBase):
 
 class VolunteerAvailabilityUpdate(BaseModel):
     availability_status: AvailabilityStatus
+
+
+class VolunteerUpdate(BaseModel):
+    skills: list[str] | None = None
+    equipment: list[str] | None = None
+    latitude: float | None = None
+    longitude: float | None = None
+    availability_status: AvailabilityStatus | None = None
+    current_workload: int | None = None

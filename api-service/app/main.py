@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+import app.db.base  # noqa: F401  (registers all models before routes resolve relationships)
+
 from app.api.routes import (
     assignments,
     auth,

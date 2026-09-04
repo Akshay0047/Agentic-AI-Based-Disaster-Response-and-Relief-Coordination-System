@@ -11,17 +11,10 @@ function RequestsSection({ data, onRefresh, formError, formSuccess, onSubmit, ro
         const r = await axios.get("/api/v1/requests")
         setTableRows(r.data || [])
         // set badge colors per severity
-        const colors = {}
+        const colors = {};
         (r.data || []).forEach((req) => {
           const sev = req.severity ?? "low"
-          colors[req.id] =
-            sev === "critical"
-              ? "red"
-              : sev === "high"
-                ? "orange"
-                : sev === "medium"
-                  ? "yellow"
-                  : "gray"
+          colors[req.id] = sev === "critical" ? "red" : sev === "high" ? "orange" : sev === "medium" ? "yellow" : "gray"
         })
         setBadgeColors(colors)
       } catch (e) {
@@ -32,16 +25,10 @@ function RequestsSection({ data, onRefresh, formError, formSuccess, onSubmit, ro
     onRefresh()
   }, [onRefresh])
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    onSubmit(e)
-  }
-
   return (
     <div>
       {formSuccess && <p style={{ color: "green" }}>{formSuccess}</p>}
       {formError && <p style={{ color: "red" }}>{formError}</p>}
-
       {role === "citizen" && (
         <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
           <div>
@@ -75,7 +62,6 @@ function RequestsSection({ data, onRefresh, formError, formSuccess, onSubmit, ro
           <button type="submit">Submit Emergency Request</button>
         </form>
       )}
-
       <h3>Requests ({tableRows.length})</h3>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
@@ -99,23 +85,12 @@ function RequestsSection({ data, onRefresh, formError, formSuccess, onSubmit, ro
                   padding: "4px 8px",
                   border: "1px solid #ccc",
                   background: badgeColors[req.id] || "transparent",
-                  color: badgeColors[req.id] === "red"
-                    ? "white"
-                    : badgeColors[req.id] === "orange"
-                      ? "#fff"
-                      : badgeColors[req.id] === "yellow"
-                        ? "#fff"
-                        : "#222",
-                }}
-              >
+                  color: badgeColors[req.id] === "red" ? "white" : badgeColors[req.id] === "orange" ? "#fff" : badgeColors[req.id] === "yellow" ? "#fff" : "#222",
+                }}>
                 {req.severity}
               </td>
-              <td style={{ padding: "4px 8px", border: "1px solid #ccc" }}>
-                {req.status}
-              </td>
-              <td style={{ padding: "4px 8px", border: "1px solid #ccc" }}>
-                {req.number_of_people}
-              </td>
+              <td style={{ padding: "4px 8px", border: "1px solid #ccc" }}>{req.status}</td>
+              <td style={{ padding: "4px 8px", border: "1px solid #ccc" }}>{req.number_of_people}</td>
             </tr>
           ))}
         </tbody>

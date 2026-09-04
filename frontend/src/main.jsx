@@ -3,8 +3,6 @@ import ReactDOM from "react-dom/client"
 import axios from "axios"
 import App from "./App.jsx"
 
-const root = ReactDOM.createRoot(document.getElementById("root"))
-
 function getJwt() {
   try {
     return window.localStorage.getItem("jwt")
@@ -17,12 +15,10 @@ function getRole() {
   try {
     const token = getJwt()
     if (!token) return null
-    // JWT payload is the middle segment, base64url encoded
     const parts = token.split(".")
     if (parts.length !== 3) return null
-    const payload = JSON.parse(
-      Buffer.from(parts[1], "base64url").decode("utf-8")
-    )
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/")
+    const payload = JSON.parse(atob(base64))
     return payload.role ?? null
   } catch {
     return null
@@ -35,9 +31,9 @@ if (getJwt()) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${getJwt()}`
 }
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(
   <React.StrictMode>
     <App jwt={getJwt()} role={getRole()} />
-  </React.StrictMode>,
-  root
+  </React.StrictMode>
 )

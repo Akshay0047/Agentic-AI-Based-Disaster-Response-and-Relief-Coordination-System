@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
+import RequestsSection from "./components/RequestsSection"
+import VolunteersSection from "./components/VolunteersSection"
+import SheltersSection from "./components/SheltersSection"
+import ResourcesSection from "./components/ResourcesSection"
+import AssignmentsSection from "./components/AssignmentsSection"
+import AgentActivityPlaceholder from "./components/AgentActivityPlaceholder"
+import LoginPage from "./pages/LoginPage"
 
 const sections = {
   requests: "Requests",
@@ -10,15 +17,45 @@ const sections = {
   agent: "AI Agent Activity",
 }
 
-function App({ jwt, role }) {
+function App() {
+  const [jwt, setJwt] = useState(() => window.localStorage.getItem("jwt"))
+  const [role, setRole] = useState(() => {
+    try {
+      const token = window.localStorage.getItem("jwt")
+      if (!token) return null
+      const parts = token.split(".")
+      if (parts.length !== 3) return null
+      const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/")
+      const payload = JSON.parse(atob(base64))
+      return payload.role ?? null
+    } catch {
+      return null
+    }
+  })
+
+  // When JWT changes, update axios headers and reload
+  useEffect(() => {
+    if (jwt) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`
+    } else {
+      delete axios.defaults.headers.common["Authorization"]
+    }
+  }, [jwt])
+
+  // If no JWT, render login page
+  if (!jwt) {
+    return <LoginPage onLogin={() => window.location.reload()} />
+  }
+
+  // Navigation and content rendering same as before...
   const [currentSection, setCurrentSection] = useState("requests")
   const [data, setData] = useState(null)
   const [formError, setFormError] = useState("")
   const [formSuccess, setFormSuccess] = useState("")
 
-  // Fetch data for the current section when section changes or component mounts
-  useEffect(() => {
-    async function load() {
+  // load() defined at top scope
+  function load() {
+    async function _load() {
       try {
         const r = await axios.get(`/api/v1/${currentSection}`)
         setData(r.data)
@@ -26,8 +63,8 @@ function App({ jwt, role }) {
         setData(null)
       }
     }
-    load()
-  }, [currentSection])
+    _load()
+  }
 
   // Submit emergency request (citizen only)
   const handleSubmit = async (e) => {

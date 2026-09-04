@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import axios from "axios"
 import RequestsSection from "./components/RequestsSection"
 import VolunteersSection from "./components/VolunteersSection"
@@ -42,19 +42,13 @@ function App() {
     }
   }, [jwt])
 
-  // If no JWT, render login page
-  if (!jwt) {
-    return <LoginPage onLogin={() => window.location.reload()} />
-  }
-
-  // Navigation and content rendering same as before...
+  // Navigation and content state — declared before any conditional return
   const [currentSection, setCurrentSection] = useState("requests")
   const [data, setData] = useState(null)
   const [formError, setFormError] = useState("")
   const [formSuccess, setFormSuccess] = useState("")
 
-  // load() defined at top scope
-  function load() {
+  const load = useCallback(async () => {
     async function _load() {
       try {
         const r = await axios.get(`/api/v1/${currentSection}`)
@@ -64,7 +58,7 @@ function App() {
       }
     }
     _load()
-  }
+  }, [currentSection])
 
   // Submit emergency request (citizen only)
   const handleSubmit = async (e) => {
@@ -102,134 +96,111 @@ function App() {
       style={{
         minHeight: "100vh",
         fontFamily: "system-ui, sans-serif",
-        background: "#fafafa",
-        color: "#222",
+        background: "#faf8ff",
+        color: "#131b2e",
       }}
     >
-      {/* Top nav */}
-      <div
+      {/* Sidebar */}
+      <aside
         style={{
-          background: "#fff",
-          borderBottom: "1px solid #ddd",
-          padding: "0.5rem 1rem",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: 64,
+          background: "#eaedff",
+          borderRight: "1px solid #cbd5e0",
+          padding: "1rem 0.5rem",
           display: "flex",
-          gap: "1rem",
-          alignItems: "center",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
-        {role === "citizen" && (
-          <button
+        <div className="flex items-center gap-2 py-3">
+          <img
+            alt="Relief Coordinator Emblem"
             style={{
-              marginRight: "1rem",
-              padding: "0.4rem 0.8rem",
-              fontSize: "0.85rem",
+              width: 32,
+              height: 32,
+              objectFit: "contain",
             }}
-            onClick={() => setCurrentSection("requests")}
-          >
-            Requests
-          </button>
-        )}
-        <button
-          style={{
-            padding: "0.4rem 0.8rem",
-            fontSize: "0.85rem",
-            border: "1px solid #888",
-            borderRadius: "4px",
-            background: currentSection === "requests" ? "#e3f2fd" : "transparent",
-          }}
-          onClick={() => setCurrentSection("requests")}
-        >
-          {sections.requests}
-        </button>
-        <button
-          style={{
-            padding: "0.4rem 0.8rem",
-            fontSize: "0.85rem",
-            border: "1px solid #888",
-            borderRadius: "4px",
-            background: currentSection === "volunteers" ? "#e3f2fd" : "transparent",
-          }}
-          onClick={() => setCurrentSection("volunteers")}
-        >
-          {sections.volunteers}
-        </button>
-        <button
-          style={{
-            padding: "0.4rem 0.8rem",
-            fontSize: "0.85rem",
-            border: "1px solid #888",
-            borderRadius: "4px",
-            background: currentSection === "shelters" ? "#e3f2fd" : "transparent",
-          }}
-          onClick={() => setCurrentSection("shelters")}
-        >
-          {sections.shelters}
-        </button>
-        <button
-          style={{
-            padding: "0.4rem 0.8rem",
-            fontSize: "0.85rem",
-            border: "1px solid #888",
-            borderRadius: "4px",
-            background: currentSection === "resources" ? "#e3f2fd" : "transparent",
-          }}
-          onClick={() => setCurrentSection("resources")}
-        >
-          {sections.resources}
-        </button>
-        <button
-          style={{
-            padding: "0.4rem 0.8rem",
-            fontSize: "0.85rem",
-            border: "1px solid #888",
-            borderRadius: "4px",
-            background: currentSection === "assignments" ? "#e3f2fd" : "transparent",
-          }}
-          onClick={() => setCurrentSection("assignments")}
-        >
-          {sections.assignments}
-        </button>
-        <button
-          style={{
-            padding: "0.4rem 0.8rem",
-            fontSize: "0.85rem",
-            border: "1px solid #888",
-            borderRadius: "4px",
-            background: currentSection === "agent" ? "#e3f2fd" : "transparent",
-          }}
-          onClick={() => setCurrentSection("agent")}
-        >
-          {sections.agent}
-        </button>
-      </div>
-
-      {/* Section content */}
-      <div style={{ padding: "1rem" }}>
-        {currentSection === "requests" && (
-          <RequestsSection
-            data={data}
-            onRefresh={load}
-            formError={formError}
-            formSuccess={formSuccess}
-            onSubmit={handleSubmit}
-            role={role}
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtAmWYMjqa0enddslblIihGmsiqn6_jCx6PfCJZ4-Nhs-nFw3l7kxijWinsgM_BeDQFDfBLZjFPgGtG58LxIw_nRgR1QxNwM2zrmEIewQ_dzf_OSsbgL-mMgGuz79bxKjwaMMpS9a4o0NMDLdsW000CxjHMM2JY0zyNE_RQMyiCxMjjMlIxJhtZ7jJSkClvAHSAJ3bxsDEek3nCbItq95_hUNjl8bNEkbyxNbzjYRkYqM65W7mX90fjw"
           />
-        )}
-        {currentSection === "volunteers" && (
-          <VolunteersSection data={data} onRefresh={load} />
-        )}
-        {currentSection === "shelters" && (
-          <SheltersSection data={data} onRefresh={load} />
-        )}
-        {currentSection === "resources" && (
-          <ResourcesSection data={data} onRefresh={load} />
-        )}
-        {currentSection === "assignments" && (
-          <AssignmentsSection data={data} onRefresh={load} />
-        )}
-        {currentSection === "agent" && (
-          <AgentActivityPlaceholder />
-        )}
+          <span className="font-semibold text-xs uppercase tracking-wider text-gray-600">Relief Coordinator</span>
+          <span className="font-xxxs text-gray-400 autonomous">Autonomous Operations</span>
+        </div>
+        <nav className="flex flex-col gap-1">
+          {navLinks.map((nav) => (
+            <button
+              key={nav.key}
+              style={{
+                width: "100%",
+                padding: "0.5rem 0.75rem",
+                marginBottom: "0.125rem",
+                borderRadius: "0.25rem",
+                fontSize: "0.7rem",
+                fontWeight: 500,
+                color: "#4a5568",
+                background: currentSection === nav.key ? "#cbd5e0" : "transparent",
+                border: "none",
+                textAlign: "left",
+                "&:hover": {
+                  background: "#a0aec0",
+                },
+              }}
+              onClick={nav.onClick}
+            >
+              {nav.label}
+            </button>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2 px-2">
+          <span className="font-xxxs text-gray-400">AI Engine: Active</span>
+          <span className="relative h-1.5 w-1.5 rounded-full bg-blue-500 opacity-75 animate-ping"></span>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <div style={{ marginLeft: 64, padding: "1rem 1.5rem" }}>
+        {/* Top command banner */}
+        <div className="bg-white rounded-lg shadow-sm p-3 mb-3 border-l-4 border-blue-500">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-blue-600">warning</span>
+            <div>
+              <span className="font-semibold text-gray-900 uppercase tracking-wider">Active Incident: Hurricane Aurelia - Sector 4 Command Center</span>
+              <span className="font-xxxs text-gray-500">Real-time sync · 12 active requests</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Section content */}
+        <div style={{ padding: "0.5rem 0" }}>
+          {currentSection === "requests" && (
+            <RequestsSection
+              data={data}
+              onRefresh={load}
+              formError={formError}
+              formSuccess={formSuccess}
+              onSubmit={handleSubmit}
+              role={role}
+            />
+          )}
+          {currentSection === "volunteers" && (
+            <VolunteersSection data={data} onRefresh={load} />
+          )}
+          {currentSection === "shelters" && (
+            <SheltersSection data={data} onRefresh={load} />
+          )}
+          {currentSection === "resources" && (
+            <ResourcesSection data={data} onRefresh={load} />
+          )}
+          {currentSection === "assignments" && (
+            <AssignmentsSection data={data} onRefresh={load} />
+          )}
+          {currentSection === "agent" && (
+            <AgentActivityPlaceholder />
+          )}
+        </div>
       </div>
     </div>
   )

@@ -26,6 +26,7 @@ app.add_middleware(
 )
 
 from app.api.routes import (
+    agent_activity,
     assignments,
     auth,
     health,
@@ -44,3 +45,4 @@ app.include_router(volunteers.router, prefix=prefix)
 app.include_router(shelters.router, prefix=prefix)
 app.include_router(resources.router, prefix=prefix)
 app.include_router(assignments.router, prefix=prefix)
+app.include_router(agent_activity.router)

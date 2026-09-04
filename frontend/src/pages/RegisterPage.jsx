@@ -2,27 +2,32 @@ import React, { useState } from "react"
 import axios from "axios"
 import MaterialSymbol from "../components/MaterialSymbol"
 
-function LoginPage({ onLogin }) {
+function RegisterPage({ onRegister }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
 
   const handleSubmit = async e => {
     e.preventDefault()
     setError("")
+    if (password !== confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
     try {
-      const r = await axios.post("/api/v1/auth/login", { email, password })
+      const r = await axios.post("/api/v1/auth/register", { email, password, role: "citizen" })
       window.localStorage.setItem("jwt", r.data.access_token)
-      onLogin()
+      onRegister()
     } catch (e) {
-      setError("Login failed — check email/password")
+      setError("Registration failed — try different email or contact admin")
     }
   }
 
   return (
     <main className="w-full min-h-screen flex items-center justify-center p-6 bg-surface">
       <div className="flex flex-col w-full items-center justify-center py-12 px-4">
-        <div className="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden relative">
+        <div className="w-full max-w-lg bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden relative">
           <div className="h-1.5 w-full bg-surface-container">
             <div className="h-full bg-primary-container transition-all duration-300 w-3/4" id="form-progress"></div>
           </div>
@@ -42,7 +47,7 @@ function LoginPage({ onLogin }) {
               </div>
               <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-1">Incident Command Operations</span>
               <h1 className="font-headline-lg text-headline-lg text-on-surface">Relief Coordinator</h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-1">AI-coordinated disaster response</p>
+              <p className="font-body-md text-body-md text-on-surface-variant mt-1">Create Emergency Personnel Account</p>
             </div>
             {/* Regulatory Notice Callout */}
             <div className="bg-surface-container-low rounded-xl p-3.5 flex items-start gap-3 shadow-sm">
@@ -57,45 +62,56 @@ function LoginPage({ onLogin }) {
                 Admin & Command accounts are provisioned directly by the Incident Commander. Self-registration is restricted to Citizens and Field Volunteers.
               </p>
             </div>
+            {/* Form */}
+            <form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-2">
+                <label className="font-label-md text-label-md text-on-surface flex items-center justify-between" for="email-input">
+                  <span>Official Email Address</span>
+                </label>
+                <input
+                  id="email-input"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-label-md text-label-md text-on-surface flex items-center justify-between" for="password-input">
+                  <span>Password</span>
+                </label>
+                <input
+                  id="password-input"
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-label-md text-label-md text-on-surface flex items-center justify-between" for="confirm-password-input">
+                  <span>Confirm Password</span>
+                </label>
+                <input
+                  id="confirm-password-input"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="rounded-lg bg-primary-container text-on-primary font-headline-sm text-label-md shadow-sm hover:bg-primary transition-colors flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined">person_add</span>
+                Create Account</button>
+            </form>
           </div>
-          {/* Form */}
-          <form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-2">
-              <label className="font-label-md text-label-md text-on-surface flex items-center justify-between" for="email-input">
-                <span>Official Email Address</span>
-              </label>
-              <input
-                id="email-input"
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="font-label-md text-label-md text-on-surface flex items-center justify-between" for="password-input">
-                <span>Password</span>
-              </label>
-              <input
-                id="password-input"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="rounded-lg bg-primary-container text-on-primary font-headline-sm text-label-md shadow-sm hover:bg-primary transition-colors flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined">login</span>
-              <span>Sign In</span>
-            </button>
-          </form>
         </div>
       </div>
     </main>
   )
 }
 
-export default LoginPage
+export default RegisterPage

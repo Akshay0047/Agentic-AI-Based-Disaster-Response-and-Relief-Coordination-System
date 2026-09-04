@@ -2,100 +2,119 @@ import React, { useState } from "react"
 import axios from "axios"
 import MaterialSymbol from "../components/MaterialSymbol"
 
-function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState("")
+const inputCls =
+  "w-full px-md py-sm rounded-lg bg-surface-container-low text-on-surface font-body text-body-md outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline"
+
+export default function LoginPage({ onLogin, onShowRegister, initialEmail = "" }) {
+  const [email, setEmail] = useState(initialEmail)
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
+    setSubmitting(true)
     try {
       const r = await axios.post("/api/v1/auth/login", { email, password })
-      window.localStorage.setItem("jwt", r.data.access_token)
-      onLogin()
-    } catch (e) {
-      setError("Login failed — check email/password")
+      onLogin(r.data.access_token)
+    } catch (err) {
+      setError(
+        err.response?.data?.detail ||
+          (err.code === "ERR_NETWORK" ? "Cannot reach the API service." : "Sign-in failed. Check your credentials.")
+      )
+    } finally {
+      setSubmitting(false)
     }
   }
 
   return (
-    <main className="w-full min-h-screen flex items-center justify-center p-6 bg-surface">
-      <div className="flex flex-col w-full items-center justify-center py-12 px-4">
-        <div className="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden relative">
-          <div className="h-1.5 w-full bg-surface-container">
-            <div className="h-full bg-primary-container transition-all duration-300 w-3/4" id="form-progress"></div>
-          </div>
-          <div className="p-8 sm:p-10 flex flex-col gap-6">
-            {/* Brand & Header */}
-            <div className="flex flex-col items-center text-center">
-              <div className="relative w-16 h-16 rounded-xl bg-surface-container-high flex items-center justify-center p-2 mb-3 shadow-sm">
-                <img
-                  alt="Relief Coordinator Emblem"
-                  className="w-full h-full object-contain rounded-lg"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtAmWYMjqa0enddslblIihGmsiqn6_jCx6PfCJZ4-Nhs-nFw3l7kxijWinsgM_BeDQFDfBLZjFPgGtG58LxIw_nRgR1QxNwM2zrmEIewQ_dzf_OSsbgL-mMgGuz79bxKjwaMMpS9a4o0NMDLdsW000CxjHMM2JY0zyNE_RQMyiCxMjjMlIxJhtZ7jJSkClvAHSAJ3bxsDEek3nCbItq95_hUNjl8bNEkbyxNbzjYRkYqM65W7mX90fjw"
-                />
-                <span class="absolute -bottom-1 -right-1 flex h-3.5 w-3.5 items-center justify-center">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary-container"></span>
-                </span>
-              </div>
-              <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-1">Incident Command Operations</span>
-              <h1 className="font-headline-lg text-headline-lg text-on-surface">Relief Coordinator</h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-1">AI-coordinated disaster response</p>
-            </div>
-            {/* Regulatory Notice Callout */}
-            <div className="bg-surface-container-low rounded-xl p-3.5 flex items-start gap-3 shadow-sm">
-              <span
-                className="material-symbols-outlined text-primary-container text-[20px] shrink-0 mt-0.5"
-                styleName="font-variation-settings: 'FILL' 1;"
-              >
-                shield_with_heart
+    <main className="min-h-screen w-full flex items-center justify-center p-md bg-surface">
+      <div className="w-full max-w-md bg-surface-container-lowest rounded-xl shadow-[0_20px_25px_-5px_rgba(19,27,46,0.12),0_8px_10px_-6px_rgba(19,27,46,0.08)] overflow-hidden">
+        <div className="h-1.5 w-full bg-surface-container">
+          <div className="h-full w-3/4 bg-primary-container" />
+        </div>
+        <div className="p-lg sm:p-2xl flex flex-col gap-lg">
+          {/* Brand header */}
+          <div className="flex flex-col items-center text-center gap-xs">
+            <div className="relative w-16 h-16 rounded-xl bg-primary-container text-on-primary flex items-center justify-center mb-xs shadow-sm">
+              <MaterialSymbol name="crisis_alert" fill className="text-3xl" />
+              <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 border-2 border-surface-container-lowest bg-primary" />
               </span>
-              <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                <strong class="text-on-surface font-headline-sm text-label-sm uppercase tracking-wide">Protocol Notice:</strong>
-                Admin & Command accounts are provisioned directly by the Incident Commander. Self-registration is restricted to Citizens and Field Volunteers.
-              </p>
             </div>
+            <span className="font-label text-label-sm uppercase tracking-wider text-secondary font-semibold">
+              Incident Command Operations
+            </span>
+            <h1 className="font-headline text-headline-lg text-on-surface tracking-tight">Relief Coordinator</h1>
+            <p className="font-body text-body-md text-on-surface-variant">AI-coordinated disaster response</p>
           </div>
+
+          {/* Protocol notice */}
+          <div className="bg-surface-container-low rounded-lg p-md flex items-start gap-sm">
+            <MaterialSymbol name="shield_with_heart" fill className="text-primary text-xl shrink-0" />
+            <p className="font-body text-body-sm text-on-surface-variant leading-relaxed">
+              <strong className="text-on-surface font-label text-label-sm uppercase tracking-wide">Protocol Notice: </strong>
+              Admin &amp; Command accounts are provisioned by the Incident Commander. Sign in with your issued credentials.
+            </p>
+          </div>
+
           {/* Form */}
-          <form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-2">
-              <label className="font-label-md text-label-md text-on-surface flex items-center justify-between" for="email-input">
-                <span>Official Email Address</span>
+          <form className="flex flex-col gap-md" onSubmit={handleSubmit}>
+            {error && (
+              <div className="flex items-center gap-sm rounded-lg bg-error-container text-on-error-container px-md py-sm font-body text-body-sm">
+                <MaterialSymbol name="error" className="text-base" /> {error}
+              </div>
+            )}
+            <div className="flex flex-col gap-xs">
+              <label htmlFor="login-email" className="font-label text-label-md text-on-surface font-semibold">
+                Official Email Address
               </label>
               <input
-                id="email-input"
+                id="login-email"
                 type="email"
+                autoComplete="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
+                placeholder="operator@relief.example"
+                className={inputCls}
               />
             </div>
-            <div className="flex flex-col gap-2">
-              <label className="font-label-md text-label-md text-on-surface flex items-center justify-between" for="password-input">
-                <span>Password</span>
+            <div className="flex flex-col gap-xs">
+              <label htmlFor="login-password" className="font-label text-label-md text-on-surface font-semibold">
+                Password
               </label>
               <input
-                id="password-input"
+                id="login-password"
                 type="password"
+                autoComplete="current-password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
+                placeholder="••••••••"
+                className={inputCls}
               />
             </div>
             <button
               type="submit"
-              className="rounded-lg bg-primary-container text-on-primary font-headline-sm text-label-md shadow-sm hover:bg-primary transition-colors flex items-center gap-2"
+              disabled={submitting}
+              className="mt-xs h-[42px] rounded-lg bg-primary-container text-on-primary font-label text-label-md font-semibold hover:bg-primary transition-colors disabled:opacity-60 flex items-center justify-center gap-sm"
             >
-              <span className="material-symbols-outlined">login</span>
-              <span>Sign In</span>
+              <MaterialSymbol name="login" className="text-lg" />
+              {submitting ? "Signing in…" : "Sign In"}
             </button>
           </form>
+
+          <p className="text-center font-body text-body-sm text-on-surface-variant">
+            Citizen or field volunteer?{" "}
+            <button type="button" onClick={onShowRegister} className="text-primary font-semibold hover:underline">
+              Create an account
+            </button>
+          </p>
         </div>
       </div>
     </main>
   )
 }
-
-export default LoginPage

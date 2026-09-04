@@ -1,109 +1,124 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import axios from "axios"
 import MaterialSymbol from "../components/MaterialSymbol"
+import { Badge, Card, EmptyState, ErrorState, Loading } from "../components/ui"
 
-function ApprovalsPage() {
-  const [approvals, setApprovals] = useState([])
-  const [loading, setLoading] = useState(true)
+/** Human-oversight queue for high-risk autonomous actions awaiting sign-off. */
+export default function ApprovalsPage() {
+  const [rows, setRows] = useState(null)
   const [error, setError] = useState("")
+  const [acting, setActing] = useState("") // id currently being decided
 
-  useEffect(() => {
-    axios.get("/api/v1/approvals/pending").then(r => setApprovals(r.data)).catch(e => setError("Failed to load approvals")).finally(() => setLoading(false))
+  const fetchRows = useCallback(async () => {
+    try {
+      setError("")
+      const r = await axios.get("/api/v1/approvals/pending")
+      setRows(r.data || [])
+    } catch (e) {
+      setRows(null)
+      setError(
+        e.response?.status
+          ? `Approval queue request failed (HTTP ${e.response.status}).`
+          : "Cannot reach the approval queue. Check that the API service is running."
+      )
+    }
   }, [])
 
-  const approve = async (id: string) => {
+  useEffect(() => { fetchRows() }, [fetchRows])
+
+  const decide = async (id, decision) => {
+    setActing(id)
     try {
-      await axios.post(`/api/v1/approvals/${id}/approve`)
-      setApprovals(approvals.filter(a => a.id !== id))
-    } catch (e) {
-      setError("Approval failed")
+      await axios.post(`/api/v1/approvals/${id}/${decision}`)
+      setRows((list) => (list ?? []).filter((a) => a.id !== id))
+    } catch {
+      setError(`Failed to ${decision} action ${id}.`)
+    } finally {
+      setActing("")
     }
   }
-
-  const reject = async (id: string) => {
-    try {
-      await axios.post(`/api/v1/approvals/${id}/reject`)
-      setApprovals(approvals.filter(a => a.id !== id))
-    } catch (e) {
-      setError("Rejection failed")
-    }
-  }
-
-  if (loading) return <div className="flex min-h-screen items-center justify-center">Loading approvals…</div>
-  if (error) return <div className="p-6 text-error">Error: {error}</div>
-  if (approvals.length === 0) return <div className="p-6 text-on-surface-variant">No pending approvals</div>
 
   return (
-    <main className="pt-16 bg-surface min-h-screen w-full px-6 py-6">
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Left: Approval Queue */}
-        <div className="w-full lg:w-3/4 space-y-4">
-          <h1 className="font-display text-display text-on-surface tracking-tight">Human Oversight & High-Risk Decision Queue</h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant">Critical actions requiring human authorization before autonomous agent execution. Supervised safety envelope active.</p>
-
-          {/* Critical Protocol Safety Banner */}
-          <div className="bg-gradient-to-r from-error-container via-surface-container-low to-surface-container-low rounded-xl p-4 shadow-sm relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-3">
-            <div className="flex items-start md:items-center gap-3 z-10">
-              <div className="p-2 rounded-xl bg-error text-on-error flex items-center justify-center shrink-0 shadow-sm">
-                <MaterialSymbol fontVariationSettings="FILL:wght:GRAD:opsz 20..48" styleName="font-variation-settings: 'FILL' 1;">shield_locked</MaterialSymbol>
-              </div>
-              <div>
-                <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-error">Restricted Command</p>
-                <p className="font-headline-sm text-headline-sm text-on-surface font-semibold">Incident Cmdr</p>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">Supervised safety envelope active</p>
-              </div>
-            </div>
-            <div className="relative flex h-10 w-1.5 rounded-full bg-primary opacity-75 shrink-0"></div>
-          </div>
-
-          {/* Approval Items */}
-          {approvals.map(app => (
-            <div key={app.id} className="bg-surface-container-lowest rounded-xl p-4 shadow-sm flex flex-col md:flex-row gap-4 hover:bg-surface-container-high transition-colors">
-              <div className="flex flex-col flex-1 min-w-0">
-                <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1">Request ID</p>
-                <p className="font-headline-sm text-headline-sm text-on-surface font-medium">{app.id}</p>
-              </div>
-              <div className="flex flex-col flex-1 min-w-0">
-                <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1">Type</p>
-                <p className="font-body-sm text-body-sm text-on-surface">{app.type}</p>
-              </div>
-              <div className="flex flex-col flex-1 min-w-0">
-                <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1">Initiated</p>
-                <p className="font-body-sm text-body-sm text-on-surface-variant">{app.timestamp}</p>
-              </div>
-            </div>
-          ))}
-
-          {/* No pending approvals */}
-        </div>
-
-        {/* Right: Telemetry Badges */}
-        <aside className="lg:w-1/4 space-y-4">
-          <div className="bg-surface-container-lowest shadow-sm rounded-xl p-4 flex items-center gap-3">
-            <MaterialSymbol fontVariationSettings="FILL:wght:GRAD:opsz 20..48" styleName="font-variation-settings: 'FILL' 1;">verified_user</MaterialSymbol>
-            <div>
-              <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Sign-Off Level</p>
-              <p className="font-headline-sm text-headline-sm text-on-surface font-semibold">Incident Cmdr</p>
-            </div>
-          </div>
-          <div className="bg-surface-container-lowest shadow-sm rounded-xl p-4 flex items-center gap-3">
-            <MaterialSymbol fontVariationSettings="FILL:wght:GRAD:opsz 20..48" styleName="font-variation-settings: 'FILL' 1;">timer</MaterialSymbol>
-            <div>
-              <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Auto-Escalation</p>
-              <p className="font-metric-num text-metric-num text-on-surface font-semibold leading-none">18m 40s</p>
-            </div>
-          </div>
-          <div className="bg-surface-container-lowest shadow-sm rounded-xl p-4 flex items-center gap-3">
-            <MaterialSymbol fontVariationSettings="FILL:wght:GRAD:opsz 20..48" styleName="font-variation-settings: 'FILL' 1;">schedule</MaterialSymbol>
-            <div>
-              <p className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Pending Reviews</p>
-              <p className="font-metric-num text-metric-num text-on-surface font-semibold leading-none">3</p>
-            </div>
-          </div>
-        </aside>
+    <div className="flex flex-col gap-xl">
+      {/* Header */}
+      <div className="flex flex-col gap-2xs">
+        <span className="font-label text-label-sm uppercase tracking-wider text-primary font-bold">
+          Governance &amp; Controls
+        </span>
+        <h1 className="font-headline text-headline-lg text-on-surface tracking-tight">
+          Human Oversight &amp; High-Risk Decision Queue
+        </h1>
+        <p className="font-body text-body-md text-on-surface-variant max-w-2xl">
+          Critical actions requiring human authorization before autonomous agent execution.
+        </p>
       </div>
-    </main>
+
+      {/* Safety banner */}
+      <Card className="p-lg flex flex-col sm:flex-row sm:items-center justify-between gap-md border-l-4 border-l-error">
+        <div className="flex items-center gap-md">
+          <div className="p-sm rounded-lg bg-error text-on-error flex items-center justify-center shrink-0">
+            <MaterialSymbol name="shield_locked" fill />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-label text-label-sm uppercase tracking-wider text-error font-bold">Restricted Command</span>
+            <span className="font-headline text-headline-sm text-on-surface">Incident Commander sign-off required</span>
+            <span className="font-body text-body-sm text-on-surface-variant">Supervised safety envelope active</span>
+          </div>
+        </div>
+        <Badge tone="red" dot pulse>Autonomy Level 2 — Supervised</Badge>
+      </Card>
+
+      {/* Queue */}
+      <Card className="overflow-hidden">
+        <div className="px-lg py-md bg-surface-container-low flex items-center justify-between">
+          <span className="font-headline text-headline-sm text-on-surface">Pending Decisions</span>
+          <button onClick={fetchRows} className="p-xs rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors" title="Refresh">
+            <MaterialSymbol name="sync" className="text-sm" />
+          </button>
+        </div>
+        {rows === null && !error ? (
+          <Loading label="Loading approval queue…" />
+        ) : error ? (
+          <ErrorState message={error} onRetry={fetchRows} />
+        ) : rows.length === 0 ? (
+          <EmptyState
+            icon="verified"
+            title="No pending approvals"
+            detail="All autonomous actions are currently within the unsupervised risk envelope, or already decided."
+          />
+        ) : (
+          <ul className="divide-y divide-surface-container-low">
+            {rows.map((a) => (
+              <li key={a.id} className="px-lg py-md flex flex-col md:flex-row md:items-center gap-md hover:bg-surface-container-low transition-colors">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-sm flex-wrap">
+                    <span className="font-code text-code-sm font-bold text-primary">{String(a.id ?? "").slice(0, 8)}</span>
+                    <Badge tone="amber">{a.risk ?? "high"} risk</Badge>
+                  </div>
+                  <p className="font-body text-body-md text-on-surface font-semibold mt-xs truncate">{a.action ?? a.tool_name ?? "Agent action"}</p>
+                  <p className="font-body text-body-sm text-on-surface-variant truncate">{a.details ?? a.timestamp ?? ""}</p>
+                </div>
+                <div className="flex items-center gap-sm shrink-0">
+                  <button
+                    onClick={() => decide(a.id, "reject")}
+                    disabled={acting === a.id}
+                    className="px-md py-sm rounded-lg font-label text-label-md font-semibold text-error hover:bg-error-container transition-colors disabled:opacity-60"
+                  >
+                    Reject
+                  </button>
+                  <button
+                    onClick={() => decide(a.id, "approve")}
+                    disabled={acting === a.id}
+                    className="px-md py-sm rounded-lg bg-primary-container text-on-primary font-label text-label-md font-semibold hover:bg-primary transition-colors disabled:opacity-60"
+                  >
+                    Approve
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+    </div>
   )
 }
-
-export default ApprovalsPage

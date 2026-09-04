@@ -1,39 +1,38 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import axios from "axios"
+import AppShell from "./components/AppShell"
 import RequestsSection from "./components/RequestsSection"
 import VolunteersSection from "./components/VolunteersSection"
 import SheltersSection from "./components/SheltersSection"
 import ResourcesSection from "./components/ResourcesSection"
 import AssignmentsSection from "./components/AssignmentsSection"
-import AgentActivityPlaceholder from "./components/AgentActivityPlaceholder"
+import AgentActivitySection from "./components/AgentActivitySection"
 import LoginPage from "./pages/LoginPage"
+import RegisterPage from "./pages/RegisterPage"
+import ApprovalsPage from "./pages/ApprovalsPage"
+import AuditLogPage from "./pages/AuditLogPage"
 
-const sections = {
-  requests: "Requests",
-  volunteers: "Volunteers",
-  shelters: "Shelters",
-  resources: "Resources",
-  assignments: "Assignments",
-  agent: "AI Agent Activity",
+function decodeRole(token) {
+  try {
+    if (!token) return null
+    const parts = token.split(".")
+    if (parts.length !== 3) return null
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/")
+    return JSON.parse(atob(base64)).role ?? null
+  } catch {
+    return null
+  }
 }
 
-function App() {
+export default function App() {
   const [jwt, setJwt] = useState(() => window.localStorage.getItem("jwt"))
-  const [role, setRole] = useState(() => {
-    try {
-      const token = window.localStorage.getItem("jwt")
-      if (!token) return null
-      const parts = token.split(".")
-      if (parts.length !== 3) return null
-      const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/")
-      const payload = JSON.parse(atob(base64))
-      return payload.role ?? null
-    } catch {
-      return null
-    }
-  })
+  const [section, setSection] = useState("requests")
+  const [authView, setAuthView] = useState("login") // "login" | "register"
+  const [registerEmail, setRegisterEmail] = useState("")
+  const [topbarStats, setTopbarStats] = useState(null)
 
-  // When JWT changes, update axios headers and reload
+  const role = useMemo(() => decodeRole(jwt), [jwt])
+
   useEffect(() => {
     if (jwt) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`
@@ -42,168 +41,72 @@ function App() {
     }
   }, [jwt])
 
-  // Navigation and content state — declared before any conditional return
-  const [currentSection, setCurrentSection] = useState("requests")
-  const [data, setData] = useState(null)
-  const [formError, setFormError] = useState("")
-  const [formSuccess, setFormSuccess] = useState("")
+  const handleAuthSuccess = useCallback((token) => {
+    window.localStorage.setItem("jwt", token)
+    setJwt(token)
+  }, [])
 
-  const load = useCallback(async () => {
-    async function _load() {
-      try {
-        const r = await axios.get(`/api/v1/${currentSection}`)
-        setData(r.data)
-      } catch (e) {
-        setData(null)
-      }
-    }
-    _load()
-  }, [currentSection])
+  const handleSignOut = useCallback(() => {
+    window.localStorage.removeItem("jwt")
+    setJwt(null)
+    setSection("requests")
+    setTopbarStats(null)
+  }, [])
 
-  // Submit emergency request (citizen only)
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setFormError("")
-    setFormSuccess("")
+  // Lightweight topbar telemetry (active requests / assigned / volunteers)
+  const fetchStats = useCallback(async () => {
+    if (!jwt) return
     try {
-      const body = {
-        emergency_type: e.target.emergency_type.value,
-        description: e.target.description.value,
-        requester_name: e.target.requester_name.value,
-        requester_contact: e.target.requester_contact.value,
-        number_of_people: Number(e.target.number_of_people.value),
-      }
-      await axios.post("/api/v1/requests", body)
-      setFormSuccess("Request submitted! Refreshing...")
-      setTimeout(() => {
-        setFormSuccess("")
-        load()
-      }, 1000)
-    } catch (e) {
-      setFormError(e.response?.data?.detail || "Submit failed")
+      const [reqs, vols] = await Promise.all([
+        axios.get("/api/v1/requests"),
+        axios.get("/api/v1/volunteers"),
+      ])
+      const requests = reqs.data ?? []
+      const volunteers = vols.data ?? []
+      setTopbarStats({
+        activeRequests: requests.filter((r) => !["resolved", "cancelled"].includes(r.status)).length,
+        assigned: requests.filter((r) => ["assigned", "in_progress"].includes(r.status)).length,
+        volunteers: volunteers.filter((v) => v.availability_status === "available").length,
+      })
+    } catch {
+      // backend unavailable — leave the previous stats in place
     }
+  }, [jwt])
+
+  useEffect(() => {
+    fetchStats()
+    const id = setInterval(fetchStats, 60000)
+    return () => clearInterval(id)
+  }, [fetchStats])
+
+  if (!jwt) {
+    return authView === "login" ? (
+      <LoginPage
+        initialEmail={registerEmail}
+        onLogin={handleAuthSuccess}
+        onShowRegister={() => setAuthView("register")}
+      />
+    ) : (
+      <RegisterPage
+        onRegistered={(email) => {
+          setRegisterEmail(email)
+          setAuthView("login")
+        }}
+        onShowLogin={() => setAuthView("login")}
+      />
+    )
   }
 
-  // Navigation
-  const navLinks = Object.entries(sections).map(([key, label]) => ({
-    key,
-    label,
-    onClick: () => setCurrentSection(key),
-  }))
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        fontFamily: "system-ui, sans-serif",
-        background: "#faf8ff",
-        color: "#131b2e",
-      }}
-    >
-      {/* Sidebar */}
-      <aside
-        style={{
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: 64,
-          background: "#eaedff",
-          borderRight: "1px solid #cbd5e0",
-          padding: "1rem 0.5rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <div className="flex items-center gap-2 py-3">
-          <img
-            alt="Relief Coordinator Emblem"
-            style={{
-              width: 32,
-              height: 32,
-              objectFit: "contain",
-            }}
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtAmWYMjqa0enddslblIihGmsiqn6_jCx6PfCJZ4-Nhs-nFw3l7kxijWinsgM_BeDQFDfBLZjFPgGtG58LxIw_nRgR1QxNwM2zrmEIewQ_dzf_OSsbgL-mMgGuz79bxKjwaMMpS9a4o0NMDLdsW000CxjHMM2JY0zyNE_RQMyiCxMjjMlIxJhtZ7jJSkClvAHSAJ3bxsDEek3nCbItq95_hUNjl8bNEkbyxNbzjYRkYqM65W7mX90fjw"
-          />
-          <span className="font-semibold text-xs uppercase tracking-wider text-gray-600">Relief Coordinator</span>
-          <span className="font-xxxs text-gray-400 autonomous">Autonomous Operations</span>
-        </div>
-        <nav className="flex flex-col gap-1">
-          {navLinks.map((nav) => (
-            <button
-              key={nav.key}
-              style={{
-                width: "100%",
-                padding: "0.5rem 0.75rem",
-                marginBottom: "0.125rem",
-                borderRadius: "0.25rem",
-                fontSize: "0.7rem",
-                fontWeight: 500,
-                color: "#4a5568",
-                background: currentSection === nav.key ? "#cbd5e0" : "transparent",
-                border: "none",
-                textAlign: "left",
-                "&:hover": {
-                  background: "#a0aec0",
-                },
-              }}
-              onClick={nav.onClick}
-            >
-              {nav.label}
-            </button>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2 px-2">
-          <span className="font-xxxs text-gray-400">AI Engine: Active</span>
-          <span className="relative h-1.5 w-1.5 rounded-full bg-blue-500 opacity-75 animate-ping"></span>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div style={{ marginLeft: 64, padding: "1rem 1.5rem" }}>
-        {/* Top command banner */}
-        <div className="bg-white rounded-lg shadow-sm p-3 mb-3 border-l-4 border-blue-500">
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-blue-600">warning</span>
-            <div>
-              <span className="font-semibold text-gray-900 uppercase tracking-wider">Active Incident: Hurricane Aurelia - Sector 4 Command Center</span>
-              <span className="font-xxxs text-gray-500">Real-time sync · 12 active requests</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Section content */}
-        <div style={{ padding: "0.5rem 0" }}>
-          {currentSection === "requests" && (
-            <RequestsSection
-              data={data}
-              onRefresh={load}
-              formError={formError}
-              formSuccess={formSuccess}
-              onSubmit={handleSubmit}
-              role={role}
-            />
-          )}
-          {currentSection === "volunteers" && (
-            <VolunteersSection data={data} onRefresh={load} />
-          )}
-          {currentSection === "shelters" && (
-            <SheltersSection data={data} onRefresh={load} />
-          )}
-          {currentSection === "resources" && (
-            <ResourcesSection data={data} onRefresh={load} />
-          )}
-          {currentSection === "assignments" && (
-            <AssignmentsSection data={data} onRefresh={load} />
-          )}
-          {currentSection === "agent" && (
-            <AgentActivityPlaceholder />
-          )}
-        </div>
-      </div>
-    </div>
+    <AppShell current={section} onSelect={setSection} role={role} onSignOut={handleSignOut} stats={topbarStats}>
+      {section === "requests" && <RequestsSection role={role} />}
+      {section === "volunteers" && <VolunteersSection />}
+      {section === "shelters" && <SheltersSection />}
+      {section === "resources" && <ResourcesSection />}
+      {section === "assignments" && <AssignmentsSection />}
+      {section === "agent" && <AgentActivitySection />}
+      {section === "approvals" && <ApprovalsPage />}
+      {section === "audit" && <AuditLogPage />}
+    </AppShell>
   )
 }
-
-export default App

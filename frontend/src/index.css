@@ -104,6 +104,16 @@
   --text-metric--line-height: 20px;
   --text-metric--letter-spacing: -0.01em;
 
+  /* Container scale (Tailwind v4 no longer ships these by default) */
+  --container-xs: 20rem;
+  --container-sm: 24rem;
+  --container-md: 28rem;
+  --container-lg: 32rem;
+  --container-xl: 36rem;
+  --container-2xl: 42rem;
+  --container-3xl: 48rem;
+  --container-4xl: 56rem;
+
   /* Spacing (Stitch `space-*` scale) */
   --spacing-3xs: 0.125rem;
   --spacing-2xs: 0.125rem;
@@ -116,12 +126,12 @@
   --spacing-2xl: 2rem;
   --spacing-3xl: 3rem;
 
-  /* Radii (Stitch: default 2px, lg 4px, xl 8px, full 12px) */
-  --radius-sm: 0.125rem;
-  --radius-md: 0.25rem;
-  --radius-lg: 0.25rem;
-  --radius-xl: 0.5rem;
-  --radius-full: 0.75rem;
+  /* Radii (Stitch: buttons/inputs 6px, cards/modals 8px, pills fully round) */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
 }
 
 body {

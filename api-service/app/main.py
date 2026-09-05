@@ -14,7 +14,6 @@ _cors_origins = [o.strip() for o in _cors_origins_str.split(",") if o.strip()]
 app = FastAPI(
     title=settings.app_name,
     debug=settings.debug,
-    cors_allowed_origins=_cors_origins,
 )
 
 app.add_middleware(

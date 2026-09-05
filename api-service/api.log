@@ -1,0 +1,2369 @@
+INFO:     Started server process [8444]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:60273 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61054 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\api\routes\auth.py", line 20, in login
+    user = await AuthService(db).authenticate(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\services\auth_service.py", line 47, in authenticate
+    result = await self.db.execute(select(User).where(User.email == data.email))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2373, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1126, in create_connection
+    raise exceptions[0]
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1103, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1006, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 729, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 803, in _poll
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] The remote computer refused the network connection
+INFO:     127.0.0.1:55079 - "POST /api/v1/auth/login HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\api\routes\auth.py", line 20, in login
+    user = await AuthService(db).authenticate(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\services\auth_service.py", line 47, in authenticate
+    result = await self.db.execute(select(User).where(User.email == data.email))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2373, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1126, in create_connection
+    raise exceptions[0]
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1103, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1006, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 729, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 803, in _poll
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] The remote computer refused the network connection
+INFO:     127.0.0.1:59985 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59985 - "POST /api/v1/auth/login HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\api\routes\auth.py", line 20, in login
+    user = await AuthService(db).authenticate(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\services\auth_service.py", line 47, in authenticate
+    result = await self.db.execute(select(User).where(User.email == data.email))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2373, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1126, in create_connection
+    raise exceptions[0]
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1103, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1006, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 729, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 803, in _poll
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] The remote computer refused the network connection
+INFO:     127.0.0.1:61260 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65074 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65074 - "POST /api/v1/auth/login HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\api\routes\auth.py", line 20, in login
+    user = await AuthService(db).authenticate(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\services\auth_service.py", line 47, in authenticate
+    result = await self.db.execute(select(User).where(User.email == data.email))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2373, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1126, in create_connection
+    raise exceptions[0]
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1103, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1006, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 729, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 803, in _poll
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] The remote computer refused the network connection
+INFO:     127.0.0.1:62557 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62557 - "POST /api/v1/auth/login HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\api\routes\auth.py", line 20, in login
+    user = await AuthService(db).authenticate(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\services\auth_service.py", line 47, in authenticate
+    result = await self.db.execute(select(User).where(User.email == data.email))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2373, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1126, in create_connection
+    raise exceptions[0]
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1103, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1006, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 729, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 803, in _poll
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] The remote computer refused the network connection
+INFO:     127.0.0.1:64782 - "POST /api/v1/auth/login HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\api\routes\auth.py", line 20, in login
+    user = await AuthService(db).authenticate(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\api-service\app\services\auth_service.py", line 47, in authenticate
+    result = await self.db.execute(select(User).where(User.email == data.email))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2373, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1191, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Projects\Agentic AI-Based Disaster Response and Relief Coordination System\.venv\Lib\site-packages\asyncpg\connect_utils.py", line 802, in _create_ssl_connection
+    tr, pr = await loop.create_connection(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1126, in create_connection
+    raise exceptions[0]
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1103, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1006, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 729, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 803, in _poll
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aksha\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] The remote computer refused the network connection
+INFO:     127.0.0.1:53720 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53720 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53657 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53657 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53657 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53657 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64582 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53657 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64582 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56324 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57324 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57324 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57324 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57731 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52479 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57324 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57731 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57324 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57731 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63263 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63263 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63263 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63263 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50196 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63263 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59763 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63263 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50209 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50209 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50209 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58355 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52631 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64552 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52631 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64552 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52631 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64552 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62802 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59353 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65246 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60416 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60416 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65246 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65246 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60416 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65246 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60416 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59856 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63016 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63016 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59856 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59856 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63016 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63016 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59856 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59856 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63016 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63016 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59856 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56543 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56543 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56543 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56543 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56543 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56543 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56543 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60499 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59529 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63423 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56907 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56907 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63423 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63423 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56907 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56907 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63423 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63423 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56907 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55679 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60408 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65252 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65252 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63222 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53192 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53936 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55451 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57608 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59347 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49878 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49878 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60990 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57631 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52304 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53047 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51267 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64417 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52884 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52884 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59366 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53219 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63383 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61366 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52465 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49845 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54011 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54011 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51630 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57715 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57715 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56791 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65236 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55025 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51763 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65226 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65226 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57538 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57538 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52412 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57538 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57538 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52412 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57538 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52552 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59557 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59557 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52552 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50799 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50799 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52552 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55443 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64339 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62081 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62081 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65280 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62211 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49787 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60501 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62065 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62065 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53844 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63008 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63008 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53844 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54920 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64601 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52023 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52352 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65533 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65533 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61804 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50927 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65336 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53361 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53361 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57978 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63916 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64569 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55160 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57554 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49749 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65278 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65278 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58590 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52246 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51459 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52541 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61730 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61730 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60756 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62403 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58621 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61234 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61234 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58621 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58621 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61234 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61234 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58621 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58621 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61234 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61234 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58621 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53567 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61671 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54774 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54774 - "POST /api/v1/requests HTTP/1.1" 201 Created
+INFO:     127.0.0.1:54774 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65071 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65071 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64042 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61115 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61115 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65035 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61407 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64507 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52090 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52090 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50748 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53900 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57110 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57110 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57110 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64067 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64067 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57110 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55738 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64067 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55738 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52914 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55882 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61995 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61995 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61995 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64027 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64027 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61995 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65021 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64027 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65021 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59501 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59501 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59501 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64917 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64207 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59501 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64917 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64207 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64917 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55234 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51402 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55234 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52138 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52138 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52138 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49754 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49754 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52138 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54531 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49754 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54531 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60562 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60562 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60562 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57854 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57854 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60562 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55942 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57854 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55942 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56762 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55823 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63009 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63009 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63009 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58680 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63664 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63009 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58680 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63664 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58680 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55463 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55463 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55463 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64059 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64059 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55463 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65072 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64059 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65072 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52542 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63210 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49753 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49753 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49753 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65163 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55631 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49753 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65163 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55631 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65163 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64788 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64788 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64788 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53585 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61277 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64788 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53585 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61277 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53585 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64642 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58049 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53024 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53024 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53024 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54138 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54138 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53024 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60832 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54138 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60832 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60460 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50210 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54725 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56276 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54428 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64320 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54428 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54428 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54428 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54428 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54428 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54428 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63043 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50398 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63043 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63043 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63043 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50398 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56650 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50546 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62836 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62836 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50123 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56450 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56180 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56119 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60838 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52136 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50584 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58151 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55629 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58151 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53272 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55394 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52589 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63627 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50386 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60013 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63627 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60013 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58638 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64272 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53799 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60166 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58667 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62178 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65145 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49812 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58644 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53832 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58644 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49680 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57900 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55948 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63673 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61281 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63842 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57678 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56030 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57678 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64867 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58382 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61329 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59661 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54013 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51717 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57315 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53275 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58331 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55319 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61330 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61330 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63908 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54795 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64149 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64500 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55276 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49668 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51220 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63614 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53253 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63470 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63802 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63470 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59736 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50060 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51544 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56947 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63383 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52332 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57751 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58118 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65482 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50572 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51613 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64550 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51613 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57896 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57661 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63172 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54656 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55117 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56695 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50527 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49162 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56762 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63751 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56762 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56794 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50060 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49671 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54537 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52088 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55406 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57296 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53438 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58060 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54700 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52998 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57697 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52998 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59334 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60047 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63118 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59129 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55182 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60346 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58590 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58591 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63970 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58988 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63970 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62345 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52944 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62369 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59849 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54509 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61374 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56851 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51373 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53426 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54658 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63210 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54658 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60452 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53107 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52101 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61801 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55047 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56067 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58030 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64655 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59030 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53581 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59030 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57250 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57927 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54575 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62048 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49668 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52655 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61244 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54019 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56356 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57727 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56596 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60189 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56596 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64011 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59269 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58655 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52837 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56970 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51303 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54446 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51467 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49208 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61977 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49208 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65334 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63193 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60042 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59485 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60275 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60000 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56617 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59765 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59825 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59959 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60065 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55537 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60065 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50608 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53218 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51237 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65365 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50639 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63684 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51009 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53079 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54939 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61146 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54939 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49326 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50131 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52352 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50348 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57486 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56130 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62032 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60595 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49668 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63010 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49668 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64202 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63085 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50276 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55991 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52330 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64298 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49875 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49669 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50721 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51251 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55736 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59551 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55736 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59483 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57768 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51207 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64112 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52518 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59225 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56183 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64800 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62397 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59204 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62397 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52074 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57048 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56150 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54874 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52607 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62287 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51736 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57997 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56695 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64675 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58899 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63872 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63872 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63468 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65169 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51927 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51439 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57118 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57118 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64560 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56565 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60055 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58691 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58691 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56060 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60553 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50901 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55779 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62372 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56032 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58273 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56660 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55606 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64135 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50658 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50658 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50658 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64106 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64106 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55629 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51833 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61845 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61423 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49199 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49199 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51675 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51675 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51675 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56103 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56103 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62839 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56861 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57538 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57538 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62454 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50433 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51936 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56194 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50747 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50747 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50747 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58159 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61863 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54022 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54022 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57562 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57562 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53542 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53542 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59832 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56363 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56363 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53439 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53772 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51321 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52629 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50491 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51531 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65374 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53380 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63494 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63494 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55481 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60241 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60241 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53764 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50133 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56763 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64273 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51692 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58205 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62928 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62928 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64133 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64133 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64133 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51211 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51211 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65486 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65486 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58967 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62639 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63400 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60833 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56130 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51368 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59643 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53660 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53660 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55422 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52165 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50550 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53197 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50124 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58590 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61236 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57243 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59233 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62935 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62935 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59294 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63672 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50523 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65415 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54377 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52486 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55596 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50814 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64011 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50951 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50951 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50112 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61056 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50877 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56745 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60966 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52242 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63292 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58899 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49156 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64524 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51925 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53609 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53609 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61595 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61311 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59680 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63437 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61245 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63959 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57331 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57331 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64789 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50060 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50060 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58590 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60041 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59377 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63504 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63096 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63096 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52260 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64178 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59037 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59037 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61234 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51116 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51116 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50470 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55864 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52476 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56299 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65112 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65112 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58590 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49763 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52865 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64815 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64815 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57457 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50210 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56768 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56768 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63557 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62323 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63261 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63261 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63261 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63261 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63261 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58333 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58333 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63261 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63261 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56149 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56149 - "GET /api/v1/shelters HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "GET /api/v1/shelters HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "GET /api/v1/shelters HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58333 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58333 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56149 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56149 - "GET /api/v1/assignments HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "GET /api/v1/assignments HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "GET /api/v1/assignments HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56149 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58333 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57319 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57319 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58333 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58899 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58899 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63138 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59953 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57076 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56669 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59972 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54241 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65503 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51935 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65463 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53662 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52246 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61223 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59747 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63378 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61928 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51328 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62783 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56389 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63993 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49871 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63993 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59940 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63521 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54577 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56527 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56527 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56527 - "GET /api/v1/assignments HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56527 - "GET /api/v1/assignments HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56527 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54577 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54577 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56527 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56527 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54577 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49963 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54577 - "GET /api/v1/shelters HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54577 - "GET /api/v1/shelters HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54577 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54577 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56065 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52486 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62334 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62334 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53759 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53759 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62502 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62261 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62261 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55024 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55982 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57436 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59337 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65185 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53778 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59368 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60845 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54871 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56535 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56535 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60543 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62043 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54525 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53353 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52360 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49301 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49301 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49301 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49301 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49301 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49301 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49301 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52576 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50687 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50687 - "GET /api/v1/shelters HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50687 - "GET /api/v1/shelters HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50687 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52576 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52576 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52576 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55341 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49668 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49893 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62404 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49893 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52013 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62721 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63290 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53845 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56794 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55162 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63092 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62657 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61998 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59852 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59852 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53265 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53265 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57018 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54164 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60218 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57973 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65489 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59233 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51880 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61151 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52688 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60195 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52688 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59260 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49670 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63417 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54810 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59253 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62008 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58113 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54770 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54770 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57404 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50060 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54553 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61403 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62862 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53415 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50591 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59105 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53428 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52165 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63992 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54219 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59249 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64216 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59249 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64692 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54093 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49307 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56157 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60545 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62061 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62061 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63937 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63937 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54721 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54721 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64508 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50710 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60908 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61942 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63740 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52191 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60162 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65135 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49272 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63414 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49272 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65306 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61572 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65473 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63484 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63178 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61237 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61755 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56943 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56943 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53684 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54805 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64358 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63592 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63592 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63592 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63592 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64814 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58899 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64814 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57846 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53363 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57543 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57543 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57543 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60371 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62468 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57543 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60371 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62468 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60371 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50711 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59385 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53382 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52563 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60303 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61426 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61426 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61426 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59292 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59292 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61426 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49857 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59292 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49857 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58900 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50505 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59438 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63521 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52461 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62270 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60100 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65009 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53636 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54824 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49774 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54824 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51755 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54402 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56096 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57482 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58899 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55790 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:49768 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58147 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58147 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56237 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56237 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54111 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62809 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62809 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62809 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62809 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54586 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62809 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62142 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62809 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61137 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61137 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61137 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57095 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57095 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61137 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58271 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57095 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61137 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62985 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62985 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62975 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61436 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61436 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62975 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62985 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61436 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61436 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62985 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62985 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62985 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62985 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62985 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62985 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59889 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59889 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60849 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53495 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65060 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:65060 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62775 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62775 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62775 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56184 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56184 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62775 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59878 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56184 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59878 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57254 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60279 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55455 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55455 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50112 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50112 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63877 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:64672 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51018 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63900 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57426 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63408 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51384 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:56069 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57573 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60808 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60808 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57573 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60815 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56590 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60469 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:52444 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55665 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:50599 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51835 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61683 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61683 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61683 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61683 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61683 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61683 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/requests HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57576 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/volunteers HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57576 - "OPTIONS /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57576 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57132 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53247 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53247 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53247 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53247 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53247 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53247 - "GET /api/v1/resources HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53247 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49670 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53520 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49670 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50628 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61775 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60509 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60509 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61716 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50605 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52776 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52813 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52813 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52813 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54090 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55381 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52813 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54090 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55381 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54090 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "OPTIONS /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "GET /api/v1/shelters HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/resources HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "OPTIONS /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/assignments HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65119 - "OPTIONS /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60727 - "GET /agent/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60727 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "OPTIONS /api/v1/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60727 - "GET /api/v1/approvals/pending HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60727 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "OPTIONS /api/v1/audit-log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53004 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60727 - "GET /api/v1/audit-log HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63591 - "OPTIONS /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63591 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63591 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55008 - "OPTIONS /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55008 - "OPTIONS /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50360 - "GET /api/v1/volunteers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63591 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50360 - "GET /api/v1/requests HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63591 - "GET /api/v1/requests HTTP/1.1" 200 OK

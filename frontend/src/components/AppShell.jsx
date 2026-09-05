@@ -45,7 +45,7 @@ function SidebarNav({ current, onSelect }) {
       </div>
       <nav className="flex flex-col gap-2xs">
         {DISPATCH_LINKS.map((l) => (
-          <NavLink key={l.key} {...l} active={current === l.key} onClick={() => onSelect(l.key)} />
+          <NavLink key={l.key} icon={l.icon} label={l.label} ai={l.ai} active={current === l.key} onClick={() => onSelect(l.key)} />
         ))}
       </nav>
       <div className="mt-lg px-sm pb-xs font-label text-label-sm text-on-surface-variant uppercase tracking-wider">
@@ -53,7 +53,7 @@ function SidebarNav({ current, onSelect }) {
       </div>
       <nav className="flex flex-col gap-2xs">
         {GOVERNANCE_LINKS.map((l) => (
-          <NavLink key={l.key} {...l} active={current === l.key} onClick={() => onSelect(l.key)} />
+          <NavLink key={l.key} icon={l.icon} label={l.label} ai={l.ai} active={current === l.key} onClick={() => onSelect(l.key)} />
         ))}
       </nav>
     </>

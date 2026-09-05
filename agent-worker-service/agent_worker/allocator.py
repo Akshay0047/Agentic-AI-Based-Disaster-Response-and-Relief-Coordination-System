@@ -23,8 +23,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from agent_worker.config import settings
-from agent_worker.tools import TOOL_SIGNALS, execute_tool, run_tool_from_call, _classify_risk
-from agent_worker.db.session import engine
+from agent_worker.tools import TOOL_SIGNALS, execute_tool, run_tool_from_call, _classify_risk, _engine
+from agent_worker.tools import TOOL_SIGNALS, execute_tool, run_tool_from_call, _classify_risk, _engine
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session as OrmSession
 
@@ -34,7 +34,7 @@ from app.models.volunteer import Volunteer
 from app.models.shelter import Shelter
 from app.models.rescue_assignment import RescueAssignment
 from app.models.agent_plan import AgentPlan
-from app.models.agent_actions_log import AgentActionLog
+from app.models.agent_action_log import AgentActionLog
 
 logger = logging.getLogger("agent_worker.allocator")
 logger.setLevel(logging.INFO)

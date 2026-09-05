@@ -156,6 +156,16 @@ body {
   background: transparent;
 }
 
+/*
+ * The Stitch spacing scale above defines named spacing tokens (md, lg, xl, 2xl…).
+ * In Tailwind v4 these shadow the container scale, making `max-w-md` etc.
+ * resolve to spacing values (12px). Restore the intended container widths here
+ * (unlayered CSS wins over the `utilities` layer).
+ */
+.max-w-md { max-width: 28rem; }
+.max-w-lg { max-width: 32rem; }
+.max-w-2xl { max-width: 42rem; }
+
 /* Material Symbols default sizing to match Stitch icon usage */
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;

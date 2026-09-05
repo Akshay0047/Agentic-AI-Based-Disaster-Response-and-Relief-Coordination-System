@@ -43,11 +43,14 @@ export default function App() {
 
   const handleAuthSuccess = useCallback((token) => {
     window.localStorage.setItem("jwt", token)
+    // Set the header synchronously so sections mounting on this render get it
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
     setJwt(token)
   }, [])
 
   const handleSignOut = useCallback(() => {
     window.localStorage.removeItem("jwt")
+    delete axios.defaults.headers.common["Authorization"]
     setJwt(null)
     setSection("requests")
     setTopbarStats(null)

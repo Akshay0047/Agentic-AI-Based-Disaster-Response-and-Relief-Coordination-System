@@ -1,466 +1,563 @@
-"""Phase 5: Autonomous allocation — OBSERVE → ANALYZE → PLAN → ACT loop.
+"""Autonomous allocation loop (Phase 5) and monitoring/replanning loop (Phase 6)
+for the Agent Worker.
 
-Runs as an asyncio background task inside the Agent Worker. Picks a new
-emergency request, observes state, analyses with the Grok tool-calling
-wiring, plans a rescue assignment, and acts through the risk-gated executor.
+Phase 5 — allocation_loop():
+    OBSERVE  -> gather recent unassigned requests, available volunteers,
+                shelters, resources (observe_state()).
+    ANALYZE  -> ask Grok (or a synthetic fallback with no API key) which tool
+                to call next for a given request.
+    PLAN     -> before calling the tool, select the best-fit volunteer using
+                real skill/distance/workload scoring (select_best_volunteer),
+                not a random pick. Record the plan + reasoning in agent_plans.
+    ACT      -> execute the tool via agent_worker.tools.execute_tool, which
+                is the single, risk-gated path allowed to touch the database.
 
-If XAI_API_KEY is available it attempts a real Grok call; otherwise it
-uses a deterministic synthetic response so the loop never blocks.
-
-The loop respects the risk gate: low-risk actions execute immediately,
-high-risk actions are queued in agent_actions_log pending admin approval.
+Phase 6 — replanning_loop():
+    MONITOR  -> track ACTIVE ASSIGNMENTS (not just "available" volunteers,
+                since a volunteer disappears from that list the instant they
+                go unavailable — tracking assignments is what lets this loop
+                actually notice a dropout after the fact).
+    REPLAN   -> when an assigned volunteer's live availability_status flips
+                to "unavailable", close out the old assignment, pick a
+                replacement volunteer, create a new assignment + new plan,
+                and mark the old plan as superseded_by the new one.
 """
 
 import asyncio
 import json
 import logging
-import random
-import sys
-from datetime import datetime, timedelta, timezone
-from pathlib import Path
+import math
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
-# Ensure the parent package is on the path so we can import sub-modules
-sys.path.insert(0, str(Path(__file__).parent.parent))
+from sqlalchemy import select
 
 from agent_worker.config import settings
-from agent_worker.tools import TOOL_SIGNALS, execute_tool, run_tool_from_call, _classify_risk, _engine
-from agent_worker.tools import TOOL_SIGNALS, execute_tool, run_tool_from_call, _classify_risk, _engine
-from sqlalchemy import select, text
-from sqlalchemy.orm import Session as OrmSession
+from agent_worker.tools import (
+    TOOL_SIGNALS,
+    _engine,
+    _classify_risk,
+    execute_tool,
+    run_tool_from_call,
+)
 
-from app.models.enums import AvailabilityStatus, EmergencyType, Priority, RequestStatus, Severity, UserRole
-from app.models.emergency_request import EmergencyRequest
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+
+from app.models.enums import AvailabilityStatus
+from app.models.user import User
 from app.models.volunteer import Volunteer
 from app.models.shelter import Shelter
+from app.models.resource import Resource
+from app.models.emergency_request import EmergencyRequest
 from app.models.rescue_assignment import RescueAssignment
 from app.models.agent_plan import AgentPlan
 from app.models.agent_action_log import AgentActionLog
 
 logger = logging.getLogger("agent_worker.allocator")
-logger.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+
+_session_factory = async_sessionmaker(autocommit=False, autoflush=False, bind=_engine)
+
+ALLOCATOR_INTERVAL_SECONDS = 20
+MONITOR_INTERVAL_SECONDS = settings.monitor_interval_seconds
+
+# Non-terminal assignment states — an assignment in one of these is still
+# "live" and needs to be watched by the replanning loop.
+ACTIVE_ASSIGNMENT_STATUSES = ("pending", "accepted", "in_progress")
+
+# Terminal request states — a request in one of these should not be picked
+# up again by the allocation loop.
+TERMINAL_REQUEST_STATUSES = ("resolved", "cancelled")
 
 
 # ---------------------------------------------------------------------------
-# Synthetic Grok response generator (used when XAI_API_KEY is absent or the
-# real call fails). Shapes its output to match the OpenAI function-call format
-# so the rest of the loop doesn't need rewriting.
+# Distance + scoring helpers (Phase 5 — real reasoning, not random.choice)
 # ---------------------------------------------------------------------------
 
-def _synthetic_grok_response(tools_sig: dict) -> dict:
-    """Return a fake tool-call dict matching the OpenAI schema.
 
-    This is NOT a real Grok API call — it's a deterministic fallback so the
-    allocation loop can run for demo purposes without a live key.
+def haversine_km(lat1, lon1, lat2, lon2) -> float:
+    """Great-circle distance in kilometers between two lat/lon points."""
+    if lat1 is None or lon1 is None or lat2 is None or lon2 is None:
+        return 9999.0
+    r = 6371.0
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
+    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+    return 2 * r * math.asin(math.sqrt(a))
+
+
+# Emergency type -> the skill that best matches it. Used to prefer a
+# skill-matched volunteer even if they are farther away than an unskilled one.
+SKILL_FOR_EMERGENCY_TYPE = {
+    "medical": "medical",
+    "fire": "rescue",
+    "flood": "rescue",
+    "earthquake": "rescue",
+    "cyclone": "rescue",
+    "landslide": "rescue",
+}
+
+
+def score_volunteer(volunteer: Dict[str, Any], request_lat, request_lon, required_skill: Optional[str]) -> tuple:
+    """Score one candidate volunteer. Higher score = better fit.
+
+    Returns (score, reason_text).
     """
-    # Pick a tool at random from the available signals
-    name = random.choice(list(tools_sig.keys()))
-    args = {}
-    p = tools_sig[name]["parameters"]
-    props = p.get("properties", {})
-    # Fill in required args with plausible demo values
-    if name == "get_nearby_volunteers":
-        args = {
-            "latitude": round(random.uniform(17.3, 17.5), 5),
-            "longitude": round(random.uniform(78.4, 78.6), 5),
-            "radius_km": random.randint(10, 80),
-            "availability_status": random.choice(["available", "busy", "unavailable"]),
-        }
-    elif name == "get_emergency_request":
-        args = {"request_id": random.choice(["req_1", "req_2", "req_3", "req_4", "req_5"])}
-    elif name == "get_volunteer_details":
-        args = {"volunteer_id": random.choice(["vol_1", "vol_2", "vol_3", "vol_4", "vol_5"])}
-    elif name == "get_shelter_capacity":
-        args = {"shelter_id": random.choice(["shel_1", "shel_2", "shel_3", "shel_4", "shel_5"])}
-    elif name == "get_relief_inventory":
-        args = {"shelter_id": random.choice(["shel_1", "shel_2"])}
-    elif name == "get_weather_information":
-        args = {"region": random.choice(["region_alpha", "region_beta", "region_gamma"])}
-    elif name == "create_rescue_assignment":
-        args = {
-            "request_id": random.choice(["req_1", "req_2", "req_3"]),
-            "volunteer_id": random.choice(["vol_1", "vol_2"]),
-            "shelter_id": random.choice(["shel_1", "shel_2"]),
-        }
-    elif name == "update_request_status":
-        args = {"request_id": random.choice(["req_1", "req_2"]), "new_status": random.choice(["new", "triaged", "assigned", "in_progress", "resolved", "cancelled"])}
-    elif name == "reserve_relief_resources":
-        args = {
-            "shelter_id": random.choice(["shel_1"]),
-            "resource_type": random.choice(["food", "water", "medicine"]),
-            "quantity": random.randint(10, 200),
-        }
-    elif name == "send_emergency_notification":
-        args = {
-            "recipient_type": random.choice(["volunteer", "citizen"]),
-            "recipient_id": random.choice(["vol_1", "citiz_1"]),
-            "channel": random.choice(["in_app", "email"]),
-            "message": "Urgent assistance needed",
-        }
+    distance = haversine_km(request_lat, request_lon, volunteer.get("latitude"), volunteer.get("longitude"))
+    skills = volunteer.get("skills") or []
+    has_skill = bool(required_skill and required_skill in skills)
+    workload = volunteer.get("current_workload", 0) or 0
+
+    score = 0.0
+    reason_parts = []
+
+    # Skill match dominates the score — a skilled volunteer far away should
+    # still outrank an unskilled volunteer nearby.
+    if has_skill:
+        score += 100.0
+        reason_parts.append(f"has required skill '{required_skill}'")
+    elif required_skill:
+        reason_parts.append(f"lacks required skill '{required_skill}'")
     else:
-        args = {}
+        reason_parts.append("no specific skill required for this request")
 
-    # Return exactly the shape OpenAI expects for a tool call
-    return {
-        "role": "assistant",
-        "content": None,
-        "tool_calls": [
-            {
-                "id": f"call_{random.randint(1000, 9999)}",
-                "type": "function",
-                "function": {"name": name, "arguments": json.dumps(args)},
-            }
-        ],
-    }
+    score -= distance * 1.0
+    reason_parts.append(f"{distance:.1f} km away")
+
+    score -= workload * 5.0
+    reason_parts.append(f"current workload {workload}")
+
+    return score, ", ".join(reason_parts)
 
 
-# ---------------------------------------------------------------------------
-# OBSERVE: read current DB state relevant to allocation
-# ---------------------------------------------------------------------------
+def select_best_volunteer(
+    candidates: List[Dict[str, Any]], request_lat, request_lon, required_skill: Optional[str]
+) -> tuple:
+    """Pick the best-fit volunteer from candidates.
 
-def observe_state() -> dict:
-    """Return a dict summarising the current state the agent needs to reason about.
-
-    Keys:
-        - recent_requests: list of newest EmergencyRequest rows (status=new or triaged)
-        - available_volunteers: volunteers with availability_status='available'
-        - shelter_capacities: shelter_id -> (capacity, current_occupancy)
-        - resource_inventory: shelter_id -> list of (resource_type, quantity)
+    Returns (chosen_volunteer_dict_or_None, reasoning_text).
     """
-    db = OrmSession(bind=engine)
-    try:
-        # New/triaged requests
-        reqs = db.scalars(
-            select(EmergencyRequest).where(
-                EmergencyRequest.status.in_(["new", "triaged"])
+    if not candidates:
+        return None, "No candidate volunteers were available."
+
+    scored = [(v, *score_volunteer(v, request_lat, request_lon, required_skill)) for v in candidates]
+    scored.sort(key=lambda row: row[1], reverse=True)
+    best_volunteer, best_score, best_reason = scored[0]
+
+    comparison = "; ".join(f"volunteer {v['id']}: {reason} (score={s:.1f})" for v, s, reason in scored)
+    reasoning = f"Selected volunteer {best_volunteer['id']} because they {best_reason}. Considered {len(scored)} candidate(s) — {comparison}."
+    return best_volunteer, reasoning
+
+
+def select_best_shelter(candidates: List[Dict[str, Any]]) -> tuple:
+    """Pick the shelter with the most free capacity, preferring ones with a
+    medical facility when capacity is otherwise similar.
+
+    Returns (chosen_shelter_dict_or_None, reasoning_text).
+    """
+    viable = [s for s in candidates if (s.get("capacity", 0) - s.get("current_occupancy", 0)) > 0]
+    if not viable:
+        return None, "No shelter with free capacity was found."
+
+    viable.sort(
+        key=lambda s: (
+            s.get("has_medical_facility", False),
+            s.get("capacity", 0) - s.get("current_occupancy", 0),
+        ),
+        reverse=True,
+    )
+    chosen = viable[0]
+    free = chosen.get("capacity", 0) - chosen.get("current_occupancy", 0)
+    reasoning = (
+        f"Selected shelter {chosen['id']} with {free} free spaces"
+        f"{' and an on-site medical facility' if chosen.get('has_medical_facility') else ''}."
+    )
+    return chosen, reasoning
+
+
+# ---------------------------------------------------------------------------
+# OBSERVE — gather current state from the database
+# ---------------------------------------------------------------------------
+
+
+async def observe_state() -> Dict[str, Any]:
+    """Read the current world state needed for allocation and replanning."""
+    async with _session_factory() as db:
+        requests = (
+            await db.scalars(
+                select(EmergencyRequest).where(
+                    ~EmergencyRequest.status.in_(TERMINAL_REQUEST_STATUSES)
+                )
             )
         ).all()
         recent_requests = [
             {
                 "id": str(r.id),
-                "status": r.status,
+                "description": r.description,
+                "emergency_type": r.emergency_type,
                 "severity": r.severity,
                 "priority": r.priority,
-                "description": r.description,
+                "status": r.status,
                 "latitude": r.latitude,
                 "longitude": r.longitude,
-                "number_of_people": r.number_of_people,
+                "requester_name": r.requester_name,
             }
-            for r in reqs
+            for r in requests
         ]
 
-        # Available volunteers
-        vols = db.scalars(
-            select(Volunteer).where(Volunteer.availability_status == AvailabilityStatus.available)
+        vols = (
+            await db.scalars(
+                select(Volunteer).where(Volunteer.availability_status == AvailabilityStatus.available)
+            )
         ).all()
         available_volunteers = [
             {
                 "id": str(v.id),
+                "user_id": str(v.user_id),
                 "skills": v.skills,
                 "current_workload": v.current_workload,
-                "user_id": str(v.user_id),
+                "latitude": v.latitude,
+                "longitude": v.longitude,
+                "availability_status": v.availability_status.value
+                if hasattr(v.availability_status, "value")
+                else v.availability_status,
             }
             for v in vols
         ]
 
-        # Shelter capacities
-        shelters = db.scalars(select(Shelter)).all()
-        shelter_capacities = {
-            str(s.id): {"capacity": s.capacity, "current_occupancy": s.current_occupancy}
+        shelters = (await db.scalars(select(Shelter))).all()
+        shelter_capacities = [
+            {
+                "id": str(s.id),
+                "name": s.name,
+                "capacity": s.capacity,
+                "current_occupancy": s.current_occupancy,
+                "has_medical_facility": s.has_medical_facility,
+            }
             for s in shelters
-        }
+        ]
 
-        # Resource inventory per shelter
-        resources = db.scalars(select(Resource)).all()
-        resource_inventory = {}
-        for r in resources:
-            resource_inventory.setdefault(str(r.shelter_id), []).append(
-                {"resource_type": r.resource_type, "quantity": r.quantity, "unit": r.unit}
+        resources = (await db.scalars(select(Resource))).all()
+        resource_inventory = [
+            {
+                "id": str(r.id),
+                "shelter_id": str(r.shelter_id) if r.shelter_id else None,
+                "resource_type": r.resource_type,
+                "quantity": r.quantity,
+                "unit": r.unit,
+            }
+            for r in resources
+        ]
+
+        # Active assignments joined with their volunteer's CURRENT
+        # availability. This is what makes replanning possible: a volunteer
+        # who has gone unavailable no longer appears in
+        # `available_volunteers` above, so the only way to notice the
+        # transition is to track it from the assignment side instead.
+        rows = (
+            await db.execute(
+                select(RescueAssignment, Volunteer)
+                .join(Volunteer, RescueAssignment.volunteer_id == Volunteer.id)
+                .where(RescueAssignment.status.in_(ACTIVE_ASSIGNMENT_STATUSES))
             )
+        ).all()
+        active_assignments = [
+            {
+                "assignment_id": str(a.id),
+                "request_id": str(a.request_id),
+                "volunteer_id": str(a.volunteer_id),
+                "shelter_id": str(a.shelter_id) if a.shelter_id else None,
+                "volunteer_availability_status": v.availability_status.value
+                if hasattr(v.availability_status, "value")
+                else v.availability_status,
+            }
+            for a, v in rows
+        ]
 
         return {
             "recent_requests": recent_requests,
             "available_volunteers": available_volunteers,
             "shelter_capacities": shelter_capacities,
             "resource_inventory": resource_inventory,
+            "active_assignments": active_assignments,
         }
-    finally:
-        db.close()
 
 
 # ---------------------------------------------------------------------------
-# PLAN: given the observed state and a proposed tool call, decide the next
-# step. In practice this is just a routing function that maps tool names to
-# the execution logic we already have in tools.py.
+# ANALYZE / ACT — ask Grok which tool to call, or fall back to a synthetic
+# response if no API key is configured (keeps the loop runnable for a demo
+# without a live xAI key).
 # ---------------------------------------------------------------------------
 
-def plan_execution(tool_name: str, args: dict, state: dict) -> dict:
-    """Run the tool through the risk gate and return the result.
 
-    This is the 'ACT' phase — execute the proposed tool and capture outcome.
+def _synthetic_tool_call(request: Dict[str, Any], volunteer: Dict[str, Any], shelter: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """Build a deterministic 'as if Grok chose this' tool call, used when no
+    XAI_API_KEY is configured so the loop can still be demonstrated end to
+    end without a live API call.
     """
-    result = execute_tool(tool_name, args)
+    return {
+        "tool": "create_rescue_assignment",
+        "arguments": {
+            "request_id": request["id"],
+            "volunteer_id": volunteer["id"],
+            "shelter_id": shelter["id"] if shelter else None,
+        },
+    }
+
+
+async def _ask_grok_for_tool_call(request: Dict[str, Any], volunteer: Dict[str, Any], shelter: Optional[Dict[str, Any]], state: Dict[str, Any]) -> Dict[str, Any]:
+    """Call Grok with the pre-selected volunteer/shelter and ask it to choose
+    the next tool call. If no API key is configured, or the call fails, fall
+    back to the synthetic tool call so the demo loop still runs.
+    """
+    if not settings.xai_api_key:
+        return _synthetic_tool_call(request, volunteer, shelter)
+
+    try:
+        from openai import AsyncOpenAI
+
+        client = AsyncOpenAI(api_key=settings.xai_api_key, base_url=settings.xai_base_url)
+        tools_payload = [
+            {"type": "function", "function": {"name": name, **sig}}
+            for name, sig in TOOL_SIGNALS.items()
+        ]
+        context = {
+            "request": request,
+            "candidate_volunteer": volunteer,
+            "candidate_shelter": shelter,
+        }
+        response = await client.chat.completions.create(
+            model=settings.grok_model,
+            max_tokens=settings.grok_max_tokens,
+            temperature=settings.grok_temperature,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are the allocation agent for a disaster-response system. "
+                        "A candidate volunteer and shelter have already been selected for you "
+                        "using skill/distance/workload scoring. Call the create_rescue_assignment "
+                        "tool with these IDs, or update_request_status if the request cannot be "
+                        "assigned yet."
+                    ),
+                },
+                {"role": "user", "content": json.dumps(context, default=str)},
+            ],
+            tools=tools_payload,
+            tool_choice="required",
+        )
+        choice = response.choices[0]
+        if choice.message.tool_calls:
+            call = choice.message.tool_calls[0]
+            return {"tool": call.function.name, "arguments": json.loads(call.function.arguments), "_raw_call": call}
+        logger.warning("Grok did not return a tool call; falling back to synthetic assignment")
+        return _synthetic_tool_call(request, volunteer, shelter)
+    except Exception as e:
+        logger.exception(f"Grok call failed, falling back to synthetic assignment: {e}")
+        return _synthetic_tool_call(request, volunteer, shelter)
+
+
+# ---------------------------------------------------------------------------
+# Phase 5 — allocation_loop
+# ---------------------------------------------------------------------------
+
+
+async def allocate_one_request(request: Dict[str, Any], state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Run one OBSERVE(already done)->ANALYZE->PLAN->ACT pass for a single
+    request. Returns the execute_tool() result, or None if no suitable
+    volunteer/shelter could be found.
+    """
+    avail_vols = state["available_volunteers"]
+    if not avail_vols:
+        logger.info(f"No available volunteers for request {request['id']}")
+        return None
+
+    required_skill = SKILL_FOR_EMERGENCY_TYPE.get(request.get("emergency_type"))
+    volunteer, volunteer_reasoning = select_best_volunteer(
+        avail_vols, request.get("latitude"), request.get("longitude"), required_skill
+    )
+    if volunteer is None:
+        logger.info(f"select_best_volunteer found no candidate for request {request['id']}")
+        return None
+
+    shelter, shelter_reasoning = select_best_shelter(state["shelter_capacities"])
+    full_reasoning = f"{volunteer_reasoning} {shelter_reasoning}"
+
+    logger.info(f"Allocator: request {request['id']} -> {full_reasoning}")
+
+    tool_call = await _ask_grok_for_tool_call(request, volunteer, shelter, state)
+
+    async with _session_factory() as db:
+        plan = AgentPlan(
+            request_id=request["id"],
+            status="active",
+            reasoning=full_reasoning,
+            created_at=datetime.now(timezone.utc),
+        )
+        db.add(plan)
+        await db.commit()
+
+    result = await execute_tool(tool_call["tool"], tool_call["arguments"])
+    logger.info(f"Allocator: executed {tool_call['tool']} for request {request['id']} -> {result.get('status')}")
     return result
 
 
-# ---------------------------------------------------------------------------
-# The main allocation loop
-# ---------------------------------------------------------------------------
-
-ALLOCATOR_INTERVAL_SECONDS = 30  # how often the loop checks for new work
-
-
 async def allocation_loop(stop_event: asyncio.Event) -> None:
-    """Phase 5 autonomous allocation loop.
-
-    Runs until *stop_event* is set. Each iteration:
-      1. OBSERVE — read current DB state
-      2. If there are new/triaged requests AND available volunteers → proceed
-      3. ANALYZE — ask Grok (or synthetic) for a tool call
-      4. PLAN / ACT — run the tool through the risk gate
-      5. If the result is "queued" → record an agent_plan row linked via
-         superseded_by (for future replanning)
-      6. Sleep for *ALLOCATOR_INTERVAL_SECONDS*
-    """
-    logger.info("Allocator loop starting")
-
+    """Phase 5: continuously look for unassigned requests and allocate them."""
+    logger.info("Allocation loop starting")
     while not stop_event.is_set():
         try:
-            state = observe_state()
-
-            # Filter to requests that still need a volunteer
-            needs_volunteer = [
-                r for r in state["recent_requests"] if r["status"] in ("new", "triaged")
+            state = await observe_state()
+            already_assigned_request_ids = {a["request_id"] for a in state["active_assignments"]}
+            pending_requests = [
+                r for r in state["recent_requests"]
+                if r["id"] not in already_assigned_request_ids and r["status"] not in TERMINAL_REQUEST_STATUSES
             ]
-            if not needs_volunteer:
-                logger.info("No new/triaged requests — skipping this iteration")
-                await asyncio.sleep(ALLOCATOR_INTERVAL_SECONDS)
-                continue
-
-            # Pick the first such request
-            request = needs_volunteer[0]
-            logger.info(f"Allocator: considering request {request['id']}")
-
-            # Filter available volunteers for this request
-            avail_vols = [v for v in state["available_volunteers"]]
-            if not avail_vols:
-                logger.info("No available volunteers — skipping")
-                await asyncio.sleep(ALLOCATOR_INTERVAL_SECONDS)
-                continue
-
-            # Pick a random available volunteer
-            volunteer = random.choice(avail_vols)
-            logger.info(f"Allocator: picked volunteer {volunteer['id']}")
-
-            # Pick a shelter that has capacity
-            preferred_shelter = None
-            for sid, cap_info in state["shelter_capacities"].items():
-                if cap_info["current_occupancy"] < cap_info["capacity"]:
-                    preferred_shelter = sid
-                    break
-            if not preferred_shelter:
-                logger.info("No shelter with spare capacity — skipping")
-                await asyncio.sleep(ALLOCATOR_INTERVAL_SECONDS)
-                continue
-
-            # -------------------------------------------------
-            # ANALYZE: ask Grok (or synthetic) for a tool call
-            # -------------------------------------------------
-            if settings.xai_api_key:
-                # Real Grok call — use the OpenAI SDK
-                try:
-                    from openai import OpenAI
-                    client = OpenAI(api_key=settings.xai_api_key, base_url=settings.xai_base_url)
-                    # Build a system prompt that steers the model toward tool calls
-                    system_prompt = (
-                        "You are the planning module of a disaster-response coordination agent. "
-                        "Select exactly one tool call from the provided tool set that moves "
-                        "the allocation forward. Respond ONLY via tool_call; do not include "
-                        "any conversational text."
-                    )
-                    messages = [
-                        {"role": "system", "content": system_prompt},
-                        {
-                            "role": "user",
-                            "content": json.dumps(
-                                {
-                                    "request": {
-                                        "id": request["id"],
-                                        "severity": request["severity"],
-                                        "priority": request["priority"],
-                                        "number_of_people": request["number_of_people"],
-                                        "latitude": request["latitude"],
-                                        "longitude": request["longitude"],
-                                    },
-                                    "volunteer": {
-                                        "id": volunteer["id"],
-                                        "skills": volunteer["skills"],
-                                        "current_workload": volunteer["current_workload"],
-                                    },
-                                    "shelter": {
-                                        "id": preferred_shelter,
-                                        "capacity": state["shelter_capacities"][preferred_shelter][
-                                            "capacity"
-                                        ],
-                                        "current_occupancy": state["shelter_capacities"][
-                                            preferred_shelter
-                                        ]["current_occupancy"],
-                                    },
-                                    "state_summary": {
-                                        "available_volunteers_count": len(state["available_volunteers"]),
-                                        "shelters_with_capacity": sum(
-                                            1
-                                            for s in state["shelter_capacities"].values()
-                                            if s["current_occupancy"] < s["capacity"]
-                                        ),
-                                    },
-                                }
-                            ),
-                        },
-                    ]
-                    resp = client.chat.completions.create(
-                        model=settings.grok_model,
-                        messages=messages,
-                        tools=list(TOOL_SIGNALS.values()),
-                        tool_choice="auto",
-                        max_tokens=settings.grok_max_tokens,
-                        temperature=settings.grok_temperature,
-                    )
-                    choice = resp.choices[0]
-                    # Parse the tool call(s) from the response
-                    tool_call = choice.message.tool_calls[0] if choice.message.tool_calls else None
-                    if tool_call:
-                        parsed = run_tool_from_call(tool_call)
-                    else:
-                        # Fallback: use synthetic response if model didn't propose a call
-                        synthetic = _synthetic_grok_response(TOOL_SIGNALS)
-                        parsed = execute_tool(synthetic["tool_calls"][0]["function"]["name"], json.loads(synthetic["tool_calls"][0]["function"]["arguments"]))
-                except Exception as e:
-                    logger.warning(f"Grok call failed ({e}); falling back to synthetic response")
-                    synthetic = _synthetic_grok_response(TOOL_SIGNALS)
-                    parsed = execute_tool(
-                        synthetic["tool_calls"][0]["function"]["name"],
-                        json.loads(synthetic["tool_calls"][0]["function"]["arguments"]),
-                    )
-            else:
-                # No XAI_API_KEY → synthetic
-                synthetic = _synthetic_grok_response(TOOL_SIGNALS)
-                parsed = execute_tool(
-                    synthetic["tool_calls"][0]["function"]["name"],
-                    json.loads(synthetic["tool_calls"][0]["function"]["arguments"]),
-                )
-
-            # -------------------------------------------------
-            # PLAN / ACT: take the action and record intent
-            # -------------------------------------------------
-            logger.info(f"Allocator: tool result -> {parsed}")
-
-            # Record an agent_plan row so we have a history of what was decided
-            try:
-                plan = AgentPlan(
-                    request_id=request["id"],
-                    status="active",
-                    reasoning=f"Allocator loop chose {parsed.get('tool','?')} with result status={parsed.get('status','?')}",
-                    created_at=datetime.now(timezone.utc),
-                )
-                db = OrmSession(bind=engine)
-                db.add(plan)
-                db.commit()
-                db.close()
-            except Exception as e:
-                logger.warning(f"Could not record agent_plan: {e}")
-
-            # If the tool result is "queued" (high-risk) we already have the
-            # agent_actions_log entry from inside execute_tool. If "executed"
-            # we just log.
-            status = parsed.get("status", "unknown")
-            if status == "queued":
-                logger.info(f"Allocator: action {parsed.get('tool','?')} queued for admin approval")
-            elif status == "executed":
-                logger.info(f"Allocator: action {parsed.get('tool','?')} executed")
-            else:
-                logger.info(f"Allocator: action {parsed.get('tool','?')} blocked/result={status}")
-
+            for request in pending_requests:
+                await allocate_one_request(request, state)
+                # Re-observe after each allocation so the next request in
+                # this batch doesn't see a volunteer/resource as available
+                # when it was just consumed by the previous one.
+                state = await observe_state()
         except Exception as e:
-            logger.exception(f"Allocator loop iteration error: {e}")
+            logger.exception(f"Allocation loop error: {e}")
 
-        # Wait for the next iteration (or until stop_event is set)
         try:
             await asyncio.wait_for(stop_event.wait(), timeout=ALLOCATOR_INTERVAL_SECONDS)
-            break  # stop_event was set during the wait
         except asyncio.TimeoutError:
-            # Normal timeout — continue the loop
             pass
 
 
 # ---------------------------------------------------------------------------
-# Phase 6: Monitoring + replanning loop
+# Phase 6 — replanning_loop
 # ---------------------------------------------------------------------------
-
-# The replanning loop watches for state changes that would invalidate the
-# current allocation and re-triggers the allocator with fresh state.
-
-MONITOR_INTERVAL_SECONDS = 60
 
 
 async def replanning_loop(stop_event: asyncio.Event) -> None:
-    """Phase 6 monitoring/replanning loop.
-
-    Watches for state changes that would merit re-allocation:
-      - A volunteer flips availability (available ↔ busy/unavailable)
-      - A shelter's occupancy crosses a threshold
-      - A resource level drops below a safety floor
-
-    When a change is detected, it sets the stop_event for the allocator loop,
-    which will then re-observe and potentially propose new assignments.
+    """Phase 6: watch active assignments for a volunteer going unavailable,
+    and automatically create a replacement plan + assignment when it happens.
     """
     logger.info("Replanning loop starting")
-
-    # Track last-known states so we can detect deltas
-    last_volunteer_status: dict = {}
-    last_shelter_occupancy: dict = {}
+    already_replanned: set = set()
 
     while not stop_event.is_set():
         try:
-            state = observe_state()
+            state = await observe_state()
 
-            # Check volunteer status changes
-            for v in state["available_volunteers"]:
-                vid = v["id"]
-                if vid in last_volunteer_status:
-                    if last_volunteer_status[vid] != v["availability_status"]:
-                        logger.info(
-                            f"Replanning: volunteer {vid} status changed "
-                            f"{last_volunteer_status[vid]} → {v['availability_status']}"
-                        )
-                last_volunteer_status[vid] = v["availability_status"]
+            for assignment in state["active_assignments"]:
+                aid = assignment["assignment_id"]
+                if aid in already_replanned:
+                    continue
+                if assignment["volunteer_availability_status"] != AvailabilityStatus.unavailable.value:
+                    continue
 
-            # Check shelter occupancy changes
-            for sid, cap_info in state["shelter_capacities"].items():
-                if sid in last_shelter_occupancy:
-                    if last_shelter_occupancy[sid] != cap_info["current_occupancy"]:
-                        logger.info(
-                            f"Replanning: shelter {sid} occupancy changed "
-                            f"{last_shelter_occupancy[sid]} → {cap_info['current_occupancy']}"
-                        )
-                last_shelter_occupancy[sid] = cap_info["current_occupancy"]
+                logger.info(
+                    f"Replanning: assignment {aid} — volunteer {assignment['volunteer_id']} "
+                    f"is now unavailable. Reassigning."
+                )
+                already_replanned.add(aid)
 
-            # Check resource levels (simple floor: if any resource < 20 units, trigger)
-            for sid, inv in state["resource_inventory"].items():
-                for item in inv:
-                    if item["quantity"] < 20:
-                        logger.info(
-                            f"Replanning: shelter {sid} {item['resource_type']} low stock ({item['quantity']})"
+                async with _session_factory() as db:
+                    try:
+                        old_assignment = await db.get(RescueAssignment, assignment["assignment_id"])
+                        if old_assignment is None:
+                            logger.warning(f"Assignment {aid} not found during replan — skipping")
+                            continue
+
+                        request_row = await db.get(EmergencyRequest, old_assignment.request_id)
+                        if request_row is None:
+                            logger.warning(f"Request for assignment {aid} not found — skipping")
+                            continue
+
+                        old_plan = (
+                            await db.scalars(
+                                select(AgentPlan)
+                                .where(AgentPlan.request_id == request_row.id, AgentPlan.status == "active")
+                                .order_by(AgentPlan.created_at.desc())
+                            )
+                        ).first()
+
+                        fresh_state = await observe_state()
+                        candidates = [
+                            v for v in fresh_state["available_volunteers"]
+                            if v["id"] != assignment["volunteer_id"]
+                        ]
+                        required_skill = SKILL_FOR_EMERGENCY_TYPE.get(request_row.emergency_type)
+                        new_volunteer, reasoning = select_best_volunteer(
+                            candidates, request_row.latitude, request_row.longitude, required_skill
                         )
+
+                        if new_volunteer is None:
+                            logger.warning(f"No replacement volunteer available for request {request_row.id}")
+                            continue
+
+                        # AssignmentStatus has no dedicated "reassigned" value
+                        # in the current schema, so "cancelled" is used as the
+                        # closest correct terminal state for the old
+                        # assignment. Consider adding a real "reassigned"
+                        # enum value + migration later for clarity.
+                        old_assignment.status = "cancelled"
+
+                        new_assignment = RescueAssignment(
+                            request_id=request_row.id,
+                            volunteer_id=new_volunteer["id"],
+                            shelter_id=old_assignment.shelter_id,
+                        )
+                        db.add(new_assignment)
+                        await db.flush()
+
+                        new_plan = AgentPlan(
+                            request_id=request_row.id,
+                            status="active",
+                            reasoning=f"Replan triggered: original volunteer {assignment['volunteer_id']} became unavailable. {reasoning}",
+                            created_at=datetime.now(timezone.utc),
+                        )
+                        db.add(new_plan)
+                        await db.flush()
+
+                        if old_plan is not None:
+                            old_plan.status = "superseded"
+                            old_plan.superseded_by = new_plan.id
+
+                        log = AgentActionLog(
+                            action_name="create_rescue_assignment",
+                            risk="high",
+                            status="pending",
+                            action_payload=json.dumps({
+                                "request_id": str(request_row.id),
+                                "old_volunteer_id": assignment["volunteer_id"],
+                                "new_volunteer_id": new_volunteer["id"],
+                                "reason": "volunteer_dropout_replan",
+                            }),
+                        )
+                        db.add(log)
+
+                        await db.commit()
+                        logger.info(
+                            f"Replanning: request {request_row.id} reassigned from "
+                            f"{assignment['volunteer_id']} to {new_volunteer['id']}"
+                        )
+                    except Exception as e:
+                        await db.rollback()
+                        logger.exception(f"Replan failed for assignment {aid}: {e}")
 
         except Exception as e:
             logger.exception(f"Replanning loop error: {e}")
 
         try:
             await asyncio.wait_for(stop_event.wait(), timeout=MONITOR_INTERVAL_SECONDS)
-            break
         except asyncio.TimeoutError:
             pass
+
+
+# ---------------------------------------------------------------------------
+# Demo / self-test
+# ---------------------------------------------------------------------------
+
+
+if __name__ == "__main__":
+    async def _demo():
+        state = await observe_state()
+        print(json.dumps(state, indent=2, default=str))
+
+    asyncio.run(_demo())

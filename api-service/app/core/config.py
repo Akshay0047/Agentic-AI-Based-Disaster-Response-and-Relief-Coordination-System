@@ -47,6 +47,18 @@ class Settings(BaseSettings):
             return v
         return None
 
+    @field_validator("debug", mode="before")
+    @classmethod
+    def _parse_debug(cls, v: Any) -> Any:
+        """Accept common environment labels without preventing API startup."""
+        if isinstance(v, str):
+            label = v.strip().lower()
+            if label in {"release", "production", "prod"}:
+                return False
+            if label in {"development", "dev"}:
+                return True
+        return v
+
     def get_async_database_url(self) -> str:
         if self.database_url:
             return self.database_url

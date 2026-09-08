@@ -50,7 +50,8 @@ _engine = create_async_engine(
 
 _async_session_factory = async_sessionmaker(autocommit=False,
                                             autoflush=False,
-                                            bind=_engine)
+                                            bind=_engine,
+                                            expire_on_commit=False)
 
 
 async def _session() -> AsyncSession:
@@ -238,6 +239,22 @@ async def execute_tool(tool_name: str, args: Dict[str, Any]) -> ExecutorResult:
     risk = _classify_risk(tool_name, args)
     async with _async_session_factory() as db:
         try:
+            # High-risk calls are proposals, never mutations.  The API's
+            # admin approval endpoint later invokes the shared mutation logic.
+            if risk == "high":
+                log = AgentActionLog(
+                    action_name=tool_name,
+                    risk="high",
+                    status="pending",
+                    action_payload=json.dumps(args),
+                )
+                db.add(log)
+                await db.commit()
+                return {
+                    "status": "queued", "tool": tool_name, "args": args,
+                    "result": {"action_id": str(log.id), "message": "Awaiting admin approval"},
+                }
+
             if tool_name == "get_emergency_request":
                 req = await db.get(EmergencyRequest, args["request_id"])
                 if not req:
@@ -257,7 +274,7 @@ async def execute_tool(tool_name: str, args: Dict[str, Any]) -> ExecutorResult:
                 stmt = select(Volunteer).where(
                     Volunteer.availability_status == status,
                 )
-                volunteers = await db.scalars(stmt).all()
+                volunteers = (await db.scalars(stmt)).all()
                 results = []
                 for v in volunteers:
                     dx = (v.latitude - lat) * 111.0
@@ -308,7 +325,7 @@ async def execute_tool(tool_name: str, args: Dict[str, Any]) -> ExecutorResult:
                 if not shel:
                     return {"status": "blocked", "tool": tool_name, "args": args,
                             "error": f"Shelter {args['shelter_id']} not found", "result": None}
-                resources = await db.scalars(select(Resource).where(Resource.shelter_id == shel.id)).all()
+                resources = (await db.scalars(select(Resource).where(Resource.shelter_id == shel.id))).all()
                 return {"status": "executed", "tool": tool_name, "args": args,
                         "result": {"shelter_id": args["shelter_id"],
                                    "resources": [{"resource_type": r.resource_type,

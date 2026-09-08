@@ -10,7 +10,7 @@ export default function AuditLogPage() {
   const fetchRows = useCallback(async () => {
     try {
       setError("")
-      const r = await axios.get("/api/v1/audit-log")
+      const r = await axios.get("/admin/logs")
       setEntries(r.data || [])
     } catch (e) {
       setEntries(null)
@@ -82,11 +82,11 @@ export default function AuditLogPage() {
           >
             {entries.map((e) => (
               <tr key={e.id} className="hover:bg-surface-container-low transition-colors">
-                <td className="py-md px-md font-code text-code-sm text-on-surface">{e.timestamp}</td>
-                <td className="py-md px-md font-body text-body-md text-on-surface font-semibold">{e.actor}</td>
-                <td className="py-md px-md font-body text-body-md text-on-surface">{e.action}</td>
-                <td className="py-md px-md font-body text-body-md text-on-surface-variant">{e.resource}</td>
-                <td className="py-md px-md font-body text-body-sm text-on-surface-variant">{e.details}</td>
+                <td className="py-md px-md font-code text-code-sm text-on-surface">{e.created_at}</td>
+                <td className="py-md px-md font-body text-body-md text-on-surface font-semibold">{e.approved_by ?? "Agent"}</td>
+                <td className="py-md px-md font-body text-body-md text-on-surface">{e.action_name}</td>
+                <td className="py-md px-md font-body text-body-md text-on-surface-variant">{e.status}</td>
+                <td className="py-md px-md font-body text-body-sm text-on-surface-variant">{JSON.stringify(e.action_payload ?? {})}</td>
               </tr>
             ))}
           </DataTable>

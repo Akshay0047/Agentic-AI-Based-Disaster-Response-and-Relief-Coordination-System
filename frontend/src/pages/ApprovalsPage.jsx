@@ -12,7 +12,7 @@ export default function ApprovalsPage() {
   const fetchRows = useCallback(async () => {
     try {
       setError("")
-      const r = await axios.get("/api/v1/approvals/pending")
+      const r = await axios.get("/agent/pending-approvals")
       setRows(r.data || [])
     } catch (e) {
       setRows(null)
@@ -29,7 +29,7 @@ export default function ApprovalsPage() {
   const decide = async (id, decision) => {
     setActing(id)
     try {
-      await axios.post(`/api/v1/approvals/${id}/${decision}`)
+      await axios.post(`/agent/${decision}/${id}`)
       setRows((list) => (list ?? []).filter((a) => a.id !== id))
     } catch {
       setError(`Failed to ${decision} action ${id}.`)
@@ -95,8 +95,8 @@ export default function ApprovalsPage() {
                     <span className="font-code text-code-sm font-bold text-primary">{String(a.id ?? "").slice(0, 8)}</span>
                     <Badge tone="amber">{a.risk ?? "high"} risk</Badge>
                   </div>
-                  <p className="font-body text-body-md text-on-surface font-semibold mt-xs truncate">{a.action ?? a.tool_name ?? "Agent action"}</p>
-                  <p className="font-body text-body-sm text-on-surface-variant truncate">{a.details ?? a.timestamp ?? ""}</p>
+                  <p className="font-body text-body-md text-on-surface font-semibold mt-xs truncate">{a.action_name ?? "Agent action"}</p>
+                  <p className="font-body text-body-sm text-on-surface-variant truncate">{JSON.stringify(a.action_payload ?? {})} · {a.created_at ?? ""}</p>
                 </div>
                 <div className="flex items-center gap-sm shrink-0">
                   <button

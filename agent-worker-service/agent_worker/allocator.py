@@ -274,12 +274,29 @@ async def observe_state() -> Dict[str, Any]:
             for a, v in rows
         ]
 
+        # A deferred high-risk assignment is already awaiting a human
+        # decision.  Do not generate a fresh duplicate proposal every poll.
+        pending_actions = (
+            await db.scalars(
+                select(AgentActionLog).where(AgentActionLog.status == "pending")
+            )
+        ).all()
+        pending_action_request_ids = set()
+        for action in pending_actions:
+            try:
+                request_id = json.loads(action.action_payload or "{}").get("request_id")
+                if request_id:
+                    pending_action_request_ids.add(str(request_id))
+            except json.JSONDecodeError:
+                logger.warning("Ignoring malformed pending action payload %s", action.id)
+
         return {
             "recent_requests": recent_requests,
             "available_volunteers": available_volunteers,
             "shelter_capacities": shelter_capacities,
             "resource_inventory": resource_inventory,
             "active_assignments": active_assignments,
+            "pending_action_request_ids": pending_action_request_ids,
         }
 
 
@@ -411,7 +428,9 @@ async def allocation_loop(stop_event: asyncio.Event) -> None:
             already_assigned_request_ids = {a["request_id"] for a in state["active_assignments"]}
             pending_requests = [
                 r for r in state["recent_requests"]
-                if r["id"] not in already_assigned_request_ids and r["status"] not in TERMINAL_REQUEST_STATUSES
+                if r["id"] not in already_assigned_request_ids
+                and r["id"] not in state["pending_action_request_ids"]
+                and r["status"] not in TERMINAL_REQUEST_STATUSES
             ]
             for request in pending_requests:
                 await allocate_one_request(request, state)
@@ -522,11 +541,17 @@ async def replanning_loop(stop_event: asyncio.Event) -> None:
                         log = AgentActionLog(
                             action_name="create_rescue_assignment",
                             risk="high",
-                            status="pending",
+                            # The replan mutation is deliberately performed
+                            # atomically in this loop (it must cancel the old
+                            # assignment and create its replacement together),
+                            # so it is an executed audit entry, never an
+                            # approval-queue item.
+                            status="executed",
                             action_payload=json.dumps({
                                 "request_id": str(request_row.id),
-                                "old_volunteer_id": assignment["volunteer_id"],
-                                "new_volunteer_id": new_volunteer["id"],
+                                "volunteer_id": new_volunteer["id"],
+                                "shelter_id": str(old_assignment.shelter_id) if old_assignment.shelter_id else None,
+                                "replaced_volunteer_id": assignment["volunteer_id"],
                                 "reason": "volunteer_dropout_replan",
                             }),
                         )
